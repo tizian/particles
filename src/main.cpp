@@ -34,7 +34,7 @@ int main()
 		auto posGen = std::make_shared<particles::DiskPositionGenerator>();
 		particleEmitter->addGenerator(posGen);
 		posGen->center = sf::Vector2f(256, 128);
-		posGen->radius = 10;
+		posGen->radius = 20.f;
 
 		position = &posGen->center;
 
@@ -45,10 +45,12 @@ int main()
 		colGen->minEndCol = sf::Color(128, 0, 150, 0);
 		colGen->maxEndCol = sf::Color(200, 128, 255, 0);
 		
-		auto velGen = std::make_shared<particles::VelocityGenerator>();
+		auto velGen = std::make_shared<particles::AngledVelocityGenerator>();
 		particleEmitter->addGenerator(velGen);
-		//velGen->minStartVel = sf::Vector2f(-3, -5.0f);
-		//velGen->maxStartVel = sf::Vector2f(3, -5.0f);
+		velGen->minAngle = -15.f;
+		velGen->maxAngle = 15.f;
+		velGen->minStartVel = 50.f;
+		velGen->maxStartVel = 50.0f;
 
 		auto timeGen = std::make_shared<particles::TimeGenerator>();
 		particleEmitter->addGenerator(timeGen);
@@ -63,15 +65,15 @@ int main()
 	auto colorUpdater = std::make_shared<particles::ColorUpdater>();
 	system.addUpdater(colorUpdater);
 
-	auto attractorUpdater = std::make_shared<particles::AttractorUpdater>();
-	system.addUpdater(attractorUpdater);
-	attractorUpdater->add(sf::Vector3f(256, 128, 1000.0f));
+	//auto attractorUpdater = std::make_shared<particles::AttractorUpdater>();
+	//system.addUpdater(attractorUpdater);
+	//attractorUpdater->add(sf::Vector3f(256, 128, 1000.0f));
 
-	sf::Vector3f &attractor = attractorUpdater->get(0);
+	//sf::Vector3f &attractor = attractorUpdater->get(0);
 
 	auto eulerUpdater = std::make_shared<particles::EulerUpdater>();
 	system.addUpdater(eulerUpdater);
-	eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
+	//eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
 	
 
 	sf::Clock clock;
@@ -84,7 +86,6 @@ int main()
 			if (event.type == sf::Event::Closed)
 				window.close();
 		}
-
 
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);

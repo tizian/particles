@@ -16,6 +16,19 @@ namespace particles
 	};
 
 
+	class PointPositionGenerator : public ParticleGenerator
+	{
+	public:
+		PointPositionGenerator() {}
+		~PointPositionGenerator() {}
+
+		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+
+	public:
+		sf::Vector2f center{ 0.0f, 0.0f };
+	};
+
+
 	class BoxPositionGenerator : public ParticleGenerator
 	{
 	public:
@@ -85,6 +98,22 @@ namespace particles
 	public:
 		sf::Vector2f minStartVel{ 0.0f, 0.0f };
 		sf::Vector2f maxStartVel{ 0.0f, 0.0f };
+	};
+
+
+	class AngledVelocityGenerator : public ParticleGenerator
+	{
+	public:
+		AngledVelocityGenerator() {}
+		~AngledVelocityGenerator() {}
+
+		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+
+	public:
+		float minAngle{ 0.0f };
+		float maxAngle{ 0.0f };
+		float minStartVel{ 0.0f };
+		float maxStartVel{ 0.0f };
 	};
 
 

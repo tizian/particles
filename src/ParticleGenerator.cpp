@@ -2,8 +2,18 @@
 
 #include "ParticleSystem.h"
 
+#include <iostream>
+
 namespace particles
 {
+	#ifndef M_PI
+	#define M_PI 3.14159265358979323846f
+	#endif
+
+	#ifndef DEG_TO_RAD
+	#define DEG_TO_RAD M_PI / 180.0f
+	#endif
+
 	inline float randomFloat(float low, float high)
 	{
 		return low + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (high - low)));
@@ -32,9 +42,14 @@ namespace particles
 		return sf::Vector2f(x, y);
 	}
 
-	#ifndef M_PI
-	#define M_PI 3.14159265358979323846f
-	#endif
+
+	void PointPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	{
+		for (size_t i = startId; i < endId; ++i)
+		{
+			p->pos[i] = center;
+		}
+	}
 
 	void BoxPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
 	{
@@ -83,6 +98,19 @@ namespace particles
 		for (size_t i = startId; i < endId; ++i)
 		{
 			p->vel[i] = randomVector2f(minStartVel, maxStartVel);
+		}
+	}
+
+
+	void AngledVelocityGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	{
+		float phi = DEG_TO_RAD * (randomFloat(minAngle, maxAngle) - 90.0f);		// offset to start at top instead of "mathematical 0 degrees"
+		sf::Vector2f dir{ std::cos(phi), std::sin(phi) };
+		float len = randomFloat(minStartVel, maxStartVel);
+
+		for (size_t i = startId; i < endId; ++i)
+		{
+			p->vel[i] = dir * len;
 		}
 	}
 
