@@ -38,10 +38,8 @@ namespace particles
 
 	void BoxPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
 	{
-		const sf::Vector2f &pos = m_system->position;
-
-		sf::Vector2f posMin{ pos.x - maxStartPosOffset.x, pos.y - maxStartPosOffset.y };
-		sf::Vector2f posMax{ pos.x + maxStartPosOffset.x, pos.y + maxStartPosOffset.y };
+		sf::Vector2f posMin{ center.x - size.x, center.y - size.y };
+		sf::Vector2f posMax{ center.x + size.x, center.y + size.y };
 
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -52,8 +50,6 @@ namespace particles
 
 	void CirclePositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
 	{
-		const sf::Vector2f &center = m_system->position;
-
 		for (size_t i = startId; i < endId; ++i)
 		{
 			float phi = randomFloat(0.0f, M_PI * 2.0f);
@@ -63,8 +59,6 @@ namespace particles
 
 	void DiskPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
 	{
-		const sf::Vector2f &center = m_system->position;
-
 		for (size_t i = startId; i < endId; ++i)
 		{
 			float phi = randomFloat(0.0f, M_PI * 2.0f);

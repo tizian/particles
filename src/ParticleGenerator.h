@@ -14,12 +14,7 @@ namespace particles
 		ParticleGenerator() {}
 		virtual ~ParticleGenerator() {}
 
-		void setSystem(ParticleSystem *s) { m_system = s; }
-
 		virtual void generate(float dt, ParticleData *p, size_t startId, size_t endId) = 0;
-
-	protected:
-		ParticleSystem *m_system;
 	};
 
 
@@ -32,7 +27,8 @@ namespace particles
 		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
 
 	public:
-	    sf::Vector2f maxStartPosOffset{ 0.0f, 0.0f };
+		sf::Vector2f center{ 0.0f, 0.0f };
+	    sf::Vector2f size{ 0.0f, 0.0f };
 	};
 
 
@@ -45,6 +41,7 @@ namespace particles
 		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
 
 	public:
+		sf::Vector2f center{ 0.0f, 0.0f };
 		sf::Vector2f radius{ 0.0f, 0.0f };
 	};
 
@@ -58,6 +55,7 @@ namespace particles
 		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
 
 	public:
+		sf::Vector2f center{ 0.0f, 0.0f };
 		float radius{ 0.0f };
 	};
 

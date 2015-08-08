@@ -22,19 +22,8 @@ namespace particles
 		virtual size_t numAllParticles() const { return m_particles.count; }
 		virtual size_t numAliveParticles() const { return m_particles.countAlive; }
 
-		void addEmitter(std::shared_ptr<ParticleEmitter> em)
-		{
-			em->setSystem(this);
-			m_emitters.push_back(em);
-		}
-		void addUpdater(std::shared_ptr<ParticleUpdater> up)
-		{
-			up->setSystem(this);
-			m_updaters.push_back(up);
-		}
-
-	public:
-		sf::Vector2f position{ 0.0f, 0.0f };
+		void addEmitter(std::shared_ptr<ParticleEmitter> em) { m_emitters.push_back(em); }
+		void addUpdater(std::shared_ptr<ParticleUpdater> up) { m_updaters.push_back(up); }
 
 	protected:
 		ParticleData m_particles;

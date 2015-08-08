@@ -10,16 +10,20 @@ int main()
 	window.setVerticalSyncEnabled(true);
 	
 	particles::ParticleSystem system(10000);
-	system.position = sf::Vector2f(256, 128);
+
+	sf::Vector2f *position;
 
 	auto particleEmitter = std::make_shared<particles::ParticleEmitter>();
 	system.addEmitter(particleEmitter);
 	{
 		particleEmitter->emitRate = 10000.0f / 4.0f;
 
-		auto posGen = std::make_shared<particles::CirclePositionGenerator>();
+		auto posGen = std::make_shared<particles::DiskPositionGenerator>();
 		particleEmitter->addGenerator(posGen);
-		posGen->radius = sf::Vector2f(50, 25);
+		posGen->center = sf::Vector2f(256, 128);
+		posGen->radius = 10;
+
+		position = &posGen->center;
 
 		auto colGen = std::make_shared<particles::ColorGenerator>();
 		particleEmitter->addGenerator(colGen);
@@ -74,7 +78,7 @@ int main()
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
 		//attractor.x = pos.x; attractor.y = pos.y;
-		system.position = pos;
+		position->x = pos.x; position->y = pos.y;
 		//particles.setEmitter();
 
 		// update it

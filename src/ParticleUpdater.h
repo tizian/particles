@@ -12,12 +12,7 @@ namespace particles
 		ParticleUpdater() { }
 		virtual ~ParticleUpdater() { }
 
-		void setSystem(ParticleSystem *s) { m_system = s; }
-
 		virtual void update(float dt, ParticleData *p) = 0;
-
-	protected:
-		ParticleSystem *m_system;
 	};
 
 
