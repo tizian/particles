@@ -1,91 +1,57 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-class ParticleSystem : public sf::Drawable, public sf::Transformable
-{
-public:
-
-	ParticleSystem(unsigned int count) :
-		m_particles(count),
-		m_vertices(sf::Points, count),
-		m_lifetime(sf::seconds(3)),
-		m_emitter(0, 0)
-	{
-	}
-
-	void setEmitter(sf::Vector2f position)
-	{
-		m_emitter = position;
-	}
-
-	void update(sf::Time elapsed)
-	{
-		for (std::size_t i = 0; i < m_particles.size(); ++i)
-		{
-			// update the particle lifetime
-			Particle& p = m_particles[i];
-			p.lifetime -= elapsed;
-
-			// if the particle is dead, respawn it
-			if (p.lifetime <= sf::Time::Zero)
-				resetParticle(i);
-
-			// update the position of the corresponding vertex
-			m_vertices[i].position += p.velocity * elapsed.asSeconds();
-
-			// update the alpha (transparency) of the particle according to its lifetime
-			float ratio = p.lifetime.asSeconds() / m_lifetime.asSeconds();
-			m_vertices[i].color.a = static_cast<sf::Uint8>(ratio * 255);
-		}
-	}
-
-private:
-
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
-	{
-		// apply the transform
-		states.transform *= getTransform();
-
-		// our particles don't use a texture
-		states.texture = NULL;
-
-		// draw the vertex array
-		target.draw(m_vertices, states);
-	}
-
-private:
-
-	struct Particle
-	{
-		sf::Vector2f velocity;
-		sf::Time lifetime;
-	};
-
-	void resetParticle(std::size_t index)
-	{
-		// give a random velocity and lifetime to the particle
-		float angle = (std::rand() % 360) * 3.14f / 180.f;
-		float speed = (std::rand() % 50) + 50.f;
-		m_particles[index].velocity = sf::Vector2f(std::cos(angle) * speed, std::sin(angle) * speed);
-		m_particles[index].lifetime = sf::milliseconds((std::rand() % 2000) + 1000);
-
-		// reset the position of the corresponding vertex
-		m_vertices[index].position = m_emitter;
-	}
-
-	std::vector<Particle> m_particles;
-	sf::VertexArray m_vertices;
-	sf::Time m_lifetime;
-	sf::Vector2f m_emitter;
-};
+#include "ParticleSystem.h"
 
 int main()
 {
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(512, 256), "Particles");
+	window.setVerticalSyncEnabled(true);
 
-	// create the particle system
-	ParticleSystem particles(1000);
+	ParticleSystem system(10000);
+
+	auto particleEmitter = std::make_shared<ParticleEmitter>();
+	{
+		particleEmitter->emitRate = 10000.0f / 4.0f;
+
+		auto posGen = std::make_shared<CirclePositionGenerator>();
+		posGen->center = sf::Vector2f(256, 128);
+		posGen->radius = sf::Vector2f(50, 25);
+		particleEmitter->addGenerator(posGen);
+
+		auto colGen = std::make_shared<BasicColorGenerator>();
+		colGen->minStartCol = sf::Color(200, 0, 200, 255);
+		colGen->maxStartCol = sf::Color(255, 255, 255, 255);
+		colGen->minEndCol = sf::Color(128, 0, 150, 0);
+		colGen->maxEndCol = sf::Color(200, 128, 255, 0);
+		particleEmitter->addGenerator(colGen);
+
+		auto velGen = std::make_shared<BasicVelocityGenerator>();
+		//velGen->minStartVel = sf::Vector2f(-3, -5.0f);
+		//velGen->maxStartVel = sf::Vector2f(3, -5.0f);
+		particleEmitter->addGenerator(velGen);
+
+		auto timeGen = std::make_shared<BasicTimeGenerator>();
+		timeGen->minTime = 3.0f;
+		timeGen->maxTime = 5.0f;
+		particleEmitter->addGenerator(timeGen);
+	}
+	system.addEmitter(particleEmitter);
+
+	auto timeUpdater = std::make_shared<BasicTimeUpdater>();
+	system.addUpdater(timeUpdater);
+
+	auto colorUpdater = std::make_shared<BasicColorUpdater>();
+	system.addUpdater(colorUpdater);
+
+	auto attractorUpdater = std::make_shared<AttractorUpdater>();
+	attractorUpdater->add(sf::Vector3f(256, 128, 1000.0f));
+	system.addUpdater(attractorUpdater);
+
+	auto eulerUpdater = std::make_shared<EulerUpdater>();
+	eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
+	system.addUpdater(eulerUpdater);
 
 	// create a clock to track the elapsed time
 	sf::Clock clock;
@@ -103,15 +69,15 @@ int main()
 
 		// make the particle system emitter follow the mouse
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
-		particles.setEmitter(window.mapPixelToCoords(mouse));
+		//particles.setEmitter(window.mapPixelToCoords(mouse));
 
 		// update it
 		sf::Time elapsed = clock.restart();
-		particles.update(elapsed);
+		system.update(elapsed.asSeconds());
 
 		// draw it
 		window.clear();
-		window.draw(particles);
+		window.draw(system);
 		window.display();
 	}
 
