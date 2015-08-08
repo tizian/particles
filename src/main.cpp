@@ -3,6 +3,19 @@
 
 #include "ParticleSystem.h"
 
+/*
+TODO
+----
+
+* Passive Systems that only emit a number of particles on demand.
+* Textures -> Use quads when textures are used
+* Scale parameter, adjustable with updaters
+* Metablob rendering with Additive BlendMode
+* Nicer way to generate Emitters? (Maybe just create some presets)
+* Template functions to add Emitters?
+
+*/
+
 int main()
 {
 	// create the window
@@ -60,13 +73,11 @@ int main()
 	system.addUpdater(eulerUpdater);
 	eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
 	
-	// create a clock to track the elapsed time
+
 	sf::Clock clock;
 
-	// run the main loop
 	while (window.isOpen())
 	{
-		// handle events
 		sf::Event event;
 		while (window.pollEvent(event))
 		{
@@ -74,18 +85,15 @@ int main()
 				window.close();
 		}
 
-		// make the particle system emitter follow the mouse
+
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
 		//attractor.x = pos.x; attractor.y = pos.y;
 		position->x = pos.x; position->y = pos.y;
-		//particles.setEmitter();
 
-		// update it
 		sf::Time elapsed = clock.restart();
 		system.update(elapsed.asSeconds());
 
-		// draw it
 		window.clear();
 		window.draw(system);
 		window.display();

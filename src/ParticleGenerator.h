@@ -6,8 +6,6 @@
 
 namespace particles
 {
-	class ParticleSystem;
-
 	class ParticleGenerator
 	{
 	public:

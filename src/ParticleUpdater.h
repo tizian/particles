@@ -4,8 +4,6 @@
 
 namespace particles
 {
-	class ParticleSystem;
-
 	class ParticleUpdater
 	{
 	public:
