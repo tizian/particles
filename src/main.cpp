@@ -3,18 +3,10 @@
 
 #include "ParticleSystem.h"
 
-/*
-TODO
-----
-* Nicer way to generate Emitters? (Maybe just create some presets)
-* Template functions to add Emitters?
-
-*/
-
 int main()
 {
 	// create the window
-	sf::RenderWindow window(sf::VideoMode(512, 256), "Particles");
+	sf::RenderWindow window(sf::VideoMode(1280, 720), "Particles");
 	window.setVerticalSyncEnabled(true);
 
 	sf::Texture circleTexture, blobTexture;
@@ -23,65 +15,54 @@ int main()
 	if (!blobTexture.loadFromFile("res/blobTexture.png"))
 		std::cout << "No blob texture!" << std::endl;
 
-	particles::ParticleSystem system(10000, &blobTexture);
-	system.additiveBlendMode = true;
-
+	// Pointer to emitter position
 	sf::Vector2f *position;
 
-	auto particleEmitter = std::make_shared<particles::ParticleEmitter>();
-	system.addEmitter(particleEmitter);
-	{
-		particleEmitter->emitRate = 10000.0f / 4.0f / 10.f;
+	// System
+	auto system = std::make_unique<particles::ParticleSystem>(10000, &blobTexture);
+	system->emitRate = 10000.0f / 4.0f / 10.f;
+	system->additiveBlendMode = true;
 
-		auto posGen = std::make_shared<particles::DiskPositionGenerator>();
-		particleEmitter->addGenerator(posGen);
-		posGen->center = sf::Vector2f(256, 128);
-		posGen->radius = 20.f;
+	// Generators
+	auto posGen = system->addGenerator<particles::BoxPositionGenerator>();
+	posGen->center = sf::Vector2f(0, 0);
+	posGen->size = sf::Vector2f(20.0f, 5.0f);
 
-		position = &posGen->center;
+	position = &posGen->center;
 
-		auto sizeGen = std::make_shared<particles::SizeGenerator>();
-		particleEmitter->addGenerator(sizeGen);
-		sizeGen->minStartSize = 1.f;
-		sizeGen->maxStartSize = 4.f;
-		sizeGen->minEndSize = 0.f;
-		sizeGen->maxEndSize = 0.5f;
+	auto sizeGen = system->addGenerator<particles::SizeGenerator>();
+	sizeGen->minStartSize = 2.0f;
+	sizeGen->maxStartSize = 10.0f;
+	sizeGen->minEndSize = 0.f;
+	sizeGen->maxEndSize = 2.f;
 
-		auto colGen = std::make_shared<particles::ColorGenerator>();
-		particleEmitter->addGenerator(colGen);
-		colGen->minStartCol = sf::Color(200, 0, 200, 255);
-		colGen->maxStartCol = sf::Color(255, 255, 255, 255);
-		colGen->minEndCol = sf::Color(128, 0, 150, 0);
-		colGen->maxEndCol = sf::Color(200, 128, 255, 0);
-		
-		auto velGen = std::make_shared<particles::AngledVelocityGenerator>();
-		particleEmitter->addGenerator(velGen);
-		velGen->minAngle = -15.f;
-		velGen->maxAngle = 15.f;
-		velGen->minStartVel = 50.f;
-		velGen->maxStartVel = 50.0f;
+	auto colGen = system->addGenerator<particles::ColorGenerator>();
+	colGen->minStartCol = sf::Color(150, 0, 180, 255);
+	colGen->maxStartCol = sf::Color(220, 255, 220, 255);
+	colGen->minEndCol = sf::Color(128, 0, 150, 0);
+	colGen->maxEndCol = sf::Color(180, 128, 220, 0);
 
-		auto timeGen = std::make_shared<particles::TimeGenerator>();
-		particleEmitter->addGenerator(timeGen);
-		timeGen->minTime = 3.0f;
-		timeGen->maxTime = 5.0f;
-	}
+	auto velGen = system->addGenerator<particles::AngledVelocityGenerator>();
+	velGen->minAngle = -20.f;
+	velGen->maxAngle = 20.f;
+	velGen->minStartVel = 100.f;
+	velGen->maxStartVel = 100.0f;
+
+	auto timeGen = system->addGenerator<particles::TimeGenerator>();
+	timeGen->minTime = 1.0f;
+	timeGen->maxTime = 5.0f;
 	
+	// Updaters
+	auto timeUpdater = system->addUpdater<particles::TimeUpdater>();
 
-	auto timeUpdater = std::make_shared<particles::TimeUpdater>();
-	system.addUpdater(timeUpdater);
+	auto colorUpdater = system->addUpdater<particles::ColorUpdater>();
 
-	auto colorUpdater = std::make_shared<particles::ColorUpdater>();
-	system.addUpdater(colorUpdater);
-
-	//auto attractorUpdater = std::make_shared<particles::AttractorUpdater>();
-	//system.addUpdater(attractorUpdater);
-	//attractorUpdater->add(sf::Vector3f(256, 128, 1000.0f));
+	//auto attractorUpdater = system->addUpdater<particles::AttractorUpdater>();
+	//attractorUpdater->add(sf::Vector3f(640, 360, 1000.0f));
 
 	//sf::Vector3f &attractor = attractorUpdater->get(0);
 
-	auto eulerUpdater = std::make_shared<particles::EulerUpdater>();
-	system.addUpdater(eulerUpdater);
+	auto eulerUpdater = system->addUpdater<particles::EulerUpdater>();
 	//eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
 	
 
@@ -104,14 +85,14 @@ int main()
 		bool pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 		if (pressed)
 		{
-			system.emit(100);
+			system->emit(100);
 		}
 
 		sf::Time elapsed = clock.restart();
-		system.update(elapsed.asSeconds());
+		system->update(elapsed);
 
 		window.clear();
-		window.draw(system);
+		window.draw(*system.get());
 		window.display();
 	}
 

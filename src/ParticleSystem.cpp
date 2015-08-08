@@ -2,7 +2,7 @@
 
 namespace particles
 {
-	ParticleSystem::ParticleSystem(size_t maxCount, sf::Texture *tex, bool active) : m_particles(maxCount), active(active)
+	ParticleSystem::ParticleSystem(size_t maxCount, sf::Texture *tex) : m_particles(maxCount)
 	{
 		m_count = maxCount;
 
@@ -33,22 +33,40 @@ namespace particles
 		}
 	}
 
-	void ParticleSystem::emit(int maxCount)
+	void ParticleSystem::emit(float dt)
 	{
-		for (auto & em : m_emitters)
+		const size_t maxNewParticles = static_cast<size_t>(dt * emitRate);
+		const size_t startId = m_particles.countAlive;
+		const size_t endId = std::min(startId + maxNewParticles, m_particles.count - 1);
+
+		for (auto &gen : m_generators)
+			gen->generate(&m_particles, startId, endId);
+
+		for (size_t i = startId; i < endId; ++i)
 		{
-			em->emit(maxCount, &m_particles);
+			m_particles.wake(i);
 		}
 	}
 
-	void ParticleSystem::update(float dt)
+	void ParticleSystem::emit(int maxCount)
+	{
+		const size_t startId = m_particles.countAlive;
+		const size_t endId = std::min(startId + maxCount, m_particles.count - 1);
+
+		for (auto &gen : m_generators)
+			gen->generate(&m_particles, startId, endId);
+
+		for (size_t i = startId; i < endId; ++i)
+		{
+			m_particles.wake(i);
+		}
+	}
+
+	void ParticleSystem::update(const sf::Time &dt)
 	{
 		if (active)
 		{
-			for (auto & em : m_emitters)
-			{
-				em->emit(dt, &m_particles);
-			}
+			emit(dt.asSeconds());
 		}
 
 		for (size_t i = 0; i < m_particles.countAlive; ++i)
@@ -58,7 +76,7 @@ namespace particles
 
 		for (auto & up : m_updaters)
 		{
-			up->update(dt, &m_particles);
+			up->update(dt.asSeconds(), &m_particles);
 		}
 
 		if (m_texture)
