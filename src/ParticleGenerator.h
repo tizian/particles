@@ -71,6 +71,22 @@ namespace particles
 	};
 
 
+	class SizeGenerator : public ParticleGenerator
+	{
+	public:
+		SizeGenerator() {}
+		~SizeGenerator() {}
+
+		void generate(ParticleData *p, size_t startId, size_t endId);
+
+	public:
+		float minStartSize{ 1.0f };
+		float maxStartSize{ 1.0f };
+		float minEndSize{ 1.0f };
+		float maxEndSize{ 1.0f };
+	};
+
+
 	class ColorGenerator : public ParticleGenerator
 	{
 	public:

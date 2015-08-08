@@ -6,9 +6,6 @@
 /*
 TODO
 ----
-* Textures -> Use quads when textures are used
-* Scale parameter, adjustable with updaters
-* Metablob rendering with Additive BlendMode
 * Nicer way to generate Emitters? (Maybe just create some presets)
 * Template functions to add Emitters?
 
@@ -19,15 +16,22 @@ int main()
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(512, 256), "Particles");
 	window.setVerticalSyncEnabled(true);
-	
-	particles::ParticleSystem system(10000, false);
+
+	sf::Texture circleTexture, blobTexture;
+	if (!circleTexture.loadFromFile("res/circleTexture.png"))
+		std::cout << "No circle texture!" << std::endl;
+	if (!blobTexture.loadFromFile("res/blobTexture.png"))
+		std::cout << "No blob texture!" << std::endl;
+
+	particles::ParticleSystem system(10000, &blobTexture);
+	system.additiveBlendMode = true;
 
 	sf::Vector2f *position;
 
 	auto particleEmitter = std::make_shared<particles::ParticleEmitter>();
 	system.addEmitter(particleEmitter);
 	{
-		particleEmitter->emitRate = 10000.0f / 4.0f;
+		particleEmitter->emitRate = 10000.0f / 4.0f / 10.f;
 
 		auto posGen = std::make_shared<particles::DiskPositionGenerator>();
 		particleEmitter->addGenerator(posGen);
@@ -35,6 +39,13 @@ int main()
 		posGen->radius = 20.f;
 
 		position = &posGen->center;
+
+		auto sizeGen = std::make_shared<particles::SizeGenerator>();
+		particleEmitter->addGenerator(sizeGen);
+		sizeGen->minStartSize = 1.f;
+		sizeGen->maxStartSize = 4.f;
+		sizeGen->minEndSize = 0.f;
+		sizeGen->maxEndSize = 0.5f;
 
 		auto colGen = std::make_shared<particles::ColorGenerator>();
 		particleEmitter->addGenerator(colGen);

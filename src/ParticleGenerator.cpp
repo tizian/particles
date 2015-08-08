@@ -81,6 +81,18 @@ namespace particles
 	}
 
 
+	void SizeGenerator::generate(ParticleData *p, size_t startId, size_t endId)
+	{
+		for (size_t i = startId; i < endId; ++i)
+		{
+			float startSize = randomFloat(minStartSize, maxStartSize);
+			float endSize = randomFloat(minEndSize, maxEndSize);
+			p->size[i].x = p->size[i].y = startSize;
+			p->size[i].z = endSize;
+		}
+	}
+
+
 	void ColorGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)

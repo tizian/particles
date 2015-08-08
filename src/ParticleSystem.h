@@ -9,7 +9,7 @@ namespace particles
 	class ParticleSystem : public sf::Drawable
 	{
 	public:
-		explicit ParticleSystem(size_t maxCount, bool active=true);
+		explicit ParticleSystem(size_t maxCount, sf::Texture *tex=nullptr, bool active=true);
 		virtual ~ParticleSystem() {}
 
 		ParticleSystem(const ParticleSystem &) = delete;
@@ -29,8 +29,11 @@ namespace particles
 
 	public:
 		bool active;
+		bool additiveBlendMode;
 
 	protected:
+		sf::Texture *m_texture;
+
 		ParticleData m_particles;
 		sf::VertexArray m_vertices;
 

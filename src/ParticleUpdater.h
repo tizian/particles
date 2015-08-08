@@ -57,6 +57,16 @@ namespace particles
 	};
 
 
+	class SizeUpdater : public ParticleUpdater
+	{
+	public:
+		SizeUpdater() {}
+		~SizeUpdater() {}
+
+		void update(float dt, ParticleData *p);
+	};
+
+
 	class ColorUpdater : public ParticleUpdater
 	{
 	public:

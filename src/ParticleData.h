@@ -22,6 +22,7 @@ namespace particles
 
     public:
         std::unique_ptr<sf::Vector2f[]> pos;
+		std::unique_ptr<sf::Vector3f[]> size;		// x: current size,		y: start size,		z: end size
         std::unique_ptr<sf::Color[]> col;
         std::unique_ptr<sf::Color[]> startCol;
         std::unique_ptr<sf::Color[]> endCol;

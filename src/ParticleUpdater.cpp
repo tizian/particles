@@ -7,6 +7,11 @@ namespace particles
 		return a.x * b.x + a.y * b.y;
 	}
 
+	inline float lerpFloat(float a, float b, float alpha)
+	{
+		return a * (1.0f - alpha) + b * alpha;
+	}
+
 	inline sf::Color lerpColor(const sf::Color &c1, const sf::Color &c2, float alpha)
 	{
 		sf::Uint8 r = (sf::Uint8)(c1.r * (1.0f - alpha) + c2.r * alpha);
@@ -72,6 +77,18 @@ namespace particles
 
 				p->acc[i] += off * dist;
 			}
+		}
+	}
+
+
+	void SizeUpdater::update(float dt, ParticleData *p)
+	{
+		const unsigned int endId = p->countAlive;
+
+		for (size_t i = 0; i < endId; ++i)
+		{
+			float a = p->time[i].z;
+			p->size[i].x = lerpFloat(p->size[i].y, p->size[i].z, a);
 		}
 	}
 

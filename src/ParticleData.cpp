@@ -8,6 +8,7 @@ namespace particles
         countAlive = 0;
 
         pos.reset(new sf::Vector2f[maxSize]);
+		size.reset(new sf::Vector3f[maxSize]);
     	col.reset(new sf::Color[maxSize]);
         startCol.reset(new sf::Color[maxSize]);
     	endCol.reset(new sf::Color[maxSize]);
@@ -40,6 +41,7 @@ namespace particles
     void ParticleData::swapData(size_t a, size_t b)
     {
         std::swap(pos[a], pos[b]);
+		std::swap(size[a], size[b]);
         std::swap(col[a], col[b]);
         std::swap(startCol[a], startCol[b]);
         std::swap(endCol[a], endCol[b]);
