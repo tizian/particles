@@ -9,7 +9,21 @@ namespace particles
 		const size_t endId = std::min(startId + maxNewParticles, p->count-1);
 
 		for (auto &gen : m_generators)
-			gen->generate(dt, p, startId, endId);
+			gen->generate(p, startId, endId);
+
+		for (size_t i = startId; i < endId; ++i)
+		{
+			p->wake(i);
+		}
+	}
+
+	void ParticleEmitter::emit(int maxCount, ParticleData *p)
+	{
+		const size_t startId = p->countAlive;
+		const size_t endId = std::min(startId + maxCount, p->count - 1);
+
+		for (auto &gen : m_generators)
+			gen->generate(p, startId, endId);
 
 		for (size_t i = startId; i < endId; ++i)
 		{

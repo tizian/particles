@@ -12,6 +12,7 @@ namespace particles
 
 		// calls all the generators and at the end it activates (wakes) particle
 		virtual void emit(float dt, ParticleData *p);
+		virtual void emit(int maxCount, ParticleData *p);
 
 		void addGenerator(std::shared_ptr<ParticleGenerator> gen) { m_generators.push_back(gen); }
 

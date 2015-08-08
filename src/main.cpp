@@ -6,8 +6,6 @@
 /*
 TODO
 ----
-
-* Passive Systems that only emit a number of particles on demand.
 * Textures -> Use quads when textures are used
 * Scale parameter, adjustable with updaters
 * Metablob rendering with Additive BlendMode
@@ -22,7 +20,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(512, 256), "Particles");
 	window.setVerticalSyncEnabled(true);
 	
-	particles::ParticleSystem system(10000);
+	particles::ParticleSystem system(10000, false);
 
 	sf::Vector2f *position;
 
@@ -91,6 +89,12 @@ int main()
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
 		//attractor.x = pos.x; attractor.y = pos.y;
 		position->x = pos.x; position->y = pos.y;
+
+		bool pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+		if (pressed)
+		{
+			system.emit(100);
+		}
 
 		sf::Time elapsed = clock.restart();
 		system.update(elapsed.asSeconds());

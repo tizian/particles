@@ -2,7 +2,7 @@
 
 namespace particles
 {
-	ParticleSystem::ParticleSystem(size_t maxCount) : m_particles(maxCount), m_vertices(sf::Points, maxCount)
+	ParticleSystem::ParticleSystem(size_t maxCount, bool active) : m_particles(maxCount), m_vertices(sf::Points, maxCount), active(active)
 	{
 		m_count = maxCount;
 
@@ -10,11 +10,22 @@ namespace particles
 			m_particles.alive[i] = false;
 	}
 
-	void ParticleSystem::update(float dt)
+	void ParticleSystem::emit(int maxCount)
 	{
 		for (auto & em : m_emitters)
 		{
-			em->emit(dt, &m_particles);
+			em->emit(maxCount, &m_particles);
+		}
+	}
+
+	void ParticleSystem::update(float dt)
+	{
+		if (active)
+		{
+			for (auto & em : m_emitters)
+			{
+				em->emit(dt, &m_particles);
+			}
 		}
 
 		for (size_t i = 0; i < m_count; ++i)

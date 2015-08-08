@@ -9,7 +9,7 @@ namespace particles
 	class ParticleSystem : public sf::Drawable
 	{
 	public:
-		explicit ParticleSystem(size_t maxCount);
+		explicit ParticleSystem(size_t maxCount, bool active=true);
 		virtual ~ParticleSystem() {}
 
 		ParticleSystem(const ParticleSystem &) = delete;
@@ -24,6 +24,11 @@ namespace particles
 
 		void addEmitter(std::shared_ptr<ParticleEmitter> em) { m_emitters.push_back(em); }
 		void addUpdater(std::shared_ptr<ParticleUpdater> up) { m_updaters.push_back(up); }
+
+		void emit(int maxCount);
+
+	public:
+		bool active;
 
 	protected:
 		ParticleData m_particles;

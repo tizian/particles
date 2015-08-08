@@ -2,8 +2,6 @@
 
 #include "ParticleSystem.h"
 
-#include <iostream>
-
 namespace particles
 {
 	#ifndef M_PI
@@ -43,7 +41,7 @@ namespace particles
 	}
 
 
-	void PointPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void PointPositionGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -51,7 +49,7 @@ namespace particles
 		}
 	}
 
-	void BoxPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void BoxPositionGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		sf::Vector2f posMin{ center.x - size.x, center.y - size.y };
 		sf::Vector2f posMax{ center.x + size.x, center.y + size.y };
@@ -63,7 +61,7 @@ namespace particles
 	}
 
 
-	void CirclePositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void CirclePositionGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -72,7 +70,7 @@ namespace particles
 		}
 	}
 
-	void DiskPositionGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void DiskPositionGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -83,7 +81,7 @@ namespace particles
 	}
 
 
-	void ColorGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void ColorGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -93,7 +91,7 @@ namespace particles
 	}
 
 
-	void VelocityGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void VelocityGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{
@@ -102,7 +100,7 @@ namespace particles
 	}
 
 
-	void AngledVelocityGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void AngledVelocityGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		float phi = DEG_TO_RAD * (randomFloat(minAngle, maxAngle) - 90.0f);		// offset to start at top instead of "mathematical 0 degrees"
 		sf::Vector2f dir{ std::cos(phi), std::sin(phi) };
@@ -115,7 +113,7 @@ namespace particles
 	}
 
 
-	void TimeGenerator::generate(float dt, ParticleData *p, size_t startId, size_t endId)
+	void TimeGenerator::generate(ParticleData *p, size_t startId, size_t endId)
 	{
 		for (size_t i = startId; i < endId; ++i)
 		{

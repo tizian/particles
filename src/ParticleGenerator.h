@@ -12,7 +12,7 @@ namespace particles
 		ParticleGenerator() {}
 		virtual ~ParticleGenerator() {}
 
-		virtual void generate(float dt, ParticleData *p, size_t startId, size_t endId) = 0;
+		virtual void generate(ParticleData *p, size_t startId, size_t endId) = 0;
 	};
 
 
@@ -22,7 +22,7 @@ namespace particles
 		PointPositionGenerator() {}
 		~PointPositionGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Vector2f center{ 0.0f, 0.0f };
@@ -35,7 +35,7 @@ namespace particles
 		BoxPositionGenerator() {}
 		~BoxPositionGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Vector2f center{ 0.0f, 0.0f };
@@ -49,7 +49,7 @@ namespace particles
 		CirclePositionGenerator() {}
 		~CirclePositionGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Vector2f center{ 0.0f, 0.0f };
@@ -63,7 +63,7 @@ namespace particles
 		DiskPositionGenerator() {}
 		~DiskPositionGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Vector2f center{ 0.0f, 0.0f };
@@ -77,7 +77,7 @@ namespace particles
 		ColorGenerator() {}
 		~ColorGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Color minStartCol{ sf::Color::Black };
@@ -93,7 +93,7 @@ namespace particles
 		VelocityGenerator() {}
 		~VelocityGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		sf::Vector2f minStartVel{ 0.0f, 0.0f };
@@ -107,7 +107,7 @@ namespace particles
 		AngledVelocityGenerator() {}
 		~AngledVelocityGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		float minAngle{ 0.0f };
@@ -123,7 +123,7 @@ namespace particles
 		TimeGenerator() {}
 		~TimeGenerator() {}
 
-		void generate(float dt, ParticleData *p, size_t startId, size_t endId);
+		void generate(ParticleData *p, size_t startId, size_t endId);
 
 	public:
 		float minTime{ 0.0f };
