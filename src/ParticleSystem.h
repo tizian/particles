@@ -4,33 +4,45 @@
 #include "ParticleEmitter.h"
 #include "ParticleUpdater.h"
 
-class ParticleSystem : public sf::Drawable, public sf::Transformable
+namespace particles
 {
-public:
-	explicit ParticleSystem(size_t maxCount);
-	virtual ~ParticleSystem() {}
+	class ParticleSystem : public sf::Drawable
+	{
+	public:
+		explicit ParticleSystem(size_t maxCount);
+		virtual ~ParticleSystem() {}
 
-	ParticleSystem(const ParticleSystem &) = delete;
-	ParticleSystem &operator=(const ParticleSystem &) = delete;
+		ParticleSystem(const ParticleSystem &) = delete;
+		ParticleSystem &operator=(const ParticleSystem &) = delete;
 
-	virtual void update(float dt);
-	void draw(sf::RenderTarget &target, sf::RenderStates states) const;
-	virtual void reset();
+		virtual void update(float dt);
+		void draw(sf::RenderTarget &target, sf::RenderStates states) const;
+		virtual void reset();
 
-	virtual size_t numAllParticles() const { return m_particles.count; }
-	virtual size_t numAliveParticles() const { return m_particles.countAlive; }
+		virtual size_t numAllParticles() const { return m_particles.count; }
+		virtual size_t numAliveParticles() const { return m_particles.countAlive; }
 
-	void addEmitter(std::shared_ptr<ParticleEmitter> em) { m_emitters.push_back(em); }
-	void addUpdater(std::shared_ptr<ParticleUpdater> up) { m_updaters.push_back(up); }
+		void addEmitter(std::shared_ptr<ParticleEmitter> em)
+		{
+			em->setSystem(this);
+			m_emitters.push_back(em);
+		}
+		void addUpdater(std::shared_ptr<ParticleUpdater> up)
+		{
+			up->setSystem(this);
+			m_updaters.push_back(up);
+		}
 
-	ParticleData *finalData() { return &m_particles; }
+	public:
+		sf::Vector2f position{ 0.0f, 0.0f };
 
-protected:
-	ParticleData m_particles;
-	sf::VertexArray m_vertices;
+	protected:
+		ParticleData m_particles;
+		sf::VertexArray m_vertices;
 
-	size_t m_count;
+		size_t m_count;
 
-	std::vector<std::shared_ptr<ParticleEmitter>> m_emitters;
-	std::vector<std::shared_ptr<ParticleUpdater>> m_updaters;
-};
+		std::vector<std::shared_ptr<ParticleEmitter>> m_emitters;
+		std::vector<std::shared_ptr<ParticleUpdater>> m_updaters;
+	};
+}
