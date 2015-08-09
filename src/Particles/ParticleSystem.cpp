@@ -1,4 +1,4 @@
-#include "ParticleSystem.h"
+#include "Particles/ParticleSystem.h"
 
 namespace particles
 {
@@ -119,7 +119,7 @@ namespace particles
 		}
 		else
 		{
-			states.blendMode = sf::BlendNone;
+			states.blendMode = sf::BlendAlpha;
 		}
 
 		if (m_texture)

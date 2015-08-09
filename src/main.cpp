@@ -1,7 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
-#include "ParticleSystem.h"
+#include "Particles/ParticleSystem.h"
 
 int main()
 {
@@ -11,9 +11,9 @@ int main()
 
 	sf::Texture circleTexture, blobTexture;
 	if (!circleTexture.loadFromFile("res/circleTexture.png"))
-		std::cout << "No circle texture!" << std::endl;
+		std::cout << "Invalid path to texture." << std::endl;
 	if (!blobTexture.loadFromFile("res/blobTexture.png"))
-		std::cout << "No blob texture!" << std::endl;
+		std::cout << "Invalid path to texture." << std::endl;
 
 	// Pointer to emitter position
 	sf::Vector2f *position;
