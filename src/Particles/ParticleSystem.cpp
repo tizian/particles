@@ -152,6 +152,7 @@ namespace particles
 	const std::string fragmentShader = \
 		"uniform sampler2D texture;" \
 		"uniform vec4 customColor;" \
+		"uniform float threshold;" \
 		"" \
 		"void main()" \
 		"{" \
