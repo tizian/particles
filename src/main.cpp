@@ -3,11 +3,17 @@
 
 #include "Particles/ParticleSystem.h"
 
+const int WIDTH = 1280;
+const int HEIGHT = 720;
+
 int main()
 {
 	// create the window
-	sf::RenderWindow window(sf::VideoMode(1280, 720), "Particles");
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Particles");
 	window.setVerticalSyncEnabled(true);
+
+	sf::RenderTexture renderTexture;
+	renderTexture.create(WIDTH, HEIGHT);
 
 	sf::Texture circleTexture, blobTexture;
 	if (!circleTexture.loadFromFile("res/circleTexture.png"))
@@ -15,26 +21,29 @@ int main()
 	if (!blobTexture.loadFromFile("res/blobTexture.png"))
 		std::cout << "Invalid path to texture." << std::endl;
 
+	circleTexture.setSmooth(true);
+	blobTexture.setSmooth(true);
+
 	// Pointer to emitter position
 	sf::Vector2f *position;
 
 	// System
-	auto system = std::make_unique<particles::ParticleSystem>(10000, &blobTexture);
+	auto system = std::make_unique<particles::MetaballParticleSystem>(10000, &blobTexture, &renderTexture);
 	system->emitRate = 10000.0f / 4.0f / 10.f;
-	system->additiveBlendMode = true;
+	system->color = sf::Color(20, 50, 100, 128);
 
 	// Generators
-	auto posGen = system->addGenerator<particles::BoxPositionGenerator>();
+	auto posGen = system->addGenerator<particles::DiskPositionGenerator>();
 	posGen->center = sf::Vector2f(0, 0);
-	posGen->size = sf::Vector2f(20.0f, 5.0f);
+	posGen->radius = 100.f;
 
 	position = &posGen->center;
 
 	auto sizeGen = system->addGenerator<particles::SizeGenerator>();
-	sizeGen->minStartSize = 2.0f;
-	sizeGen->maxStartSize = 10.0f;
-	sizeGen->minEndSize = 0.f;
-	sizeGen->maxEndSize = 2.f;
+	sizeGen->minStartSize = 10.0f;
+	sizeGen->maxStartSize = 30.0f;
+	sizeGen->minEndSize = 5.f;
+	sizeGen->maxEndSize = 15.f;
 
 	auto colGen = system->addGenerator<particles::ColorGenerator>();
 	colGen->minStartCol = sf::Color(150, 0, 180, 255);
@@ -65,7 +74,6 @@ int main()
 	auto eulerUpdater = system->addUpdater<particles::EulerUpdater>();
 	//eulerUpdater->globalAcceleration = sf::Vector2f(0.0f, 1000.0f);
 	
-
 	sf::Clock clock;
 
 	while (window.isOpen())
@@ -79,20 +87,14 @@ int main()
 
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
-		//attractor.x = pos.x; attractor.y = pos.y;
-		position->x = pos.x; position->y = pos.y;
 
-		bool pressed = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
-		if (pressed)
-		{
-			system->emit(100);
-		}
+		position->x = pos.x; position->y = pos.y;
 
 		sf::Time elapsed = clock.restart();
 		system->update(elapsed);
 
 		window.clear();
-		window.draw(*system.get());
+		system->render(window);
 		window.display();
 	}
 
