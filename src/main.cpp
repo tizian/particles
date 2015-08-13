@@ -188,6 +188,8 @@ void configurePosGen(PosGenMode mode)
 
 	}
 		break;
+	default:
+		break;
 	}
 }
 
@@ -227,6 +229,8 @@ void configureVelGen(VelGenMode mode)
 
 	}
 	break;
+	default:
+		break;
 	}
 }
 
@@ -340,6 +344,8 @@ void updateRenderMode()
 
 int main()
 {
+	bool wrongDir = false;
+
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Particles");
 	window.setVerticalSyncEnabled(true);
@@ -358,9 +364,21 @@ int main()
 	circleTexture = new sf::Texture();
 	blobTexture = new sf::Texture();
 	if (!circleTexture->loadFromFile("res/circleTexture.png"))
+	{
 		std::cout << "Invalid path to texture." << std::endl;
+		wrongDir = true;
+	}
 	if (!blobTexture->loadFromFile("res/blobTexture.png"))
+	{
 		std::cout << "Invalid path to texture." << std::endl;
+		wrongDir = true;
+	}
+
+	if (wrongDir)
+	{
+		std::cerr << "Please use the 'particles' root directory as working directory." << std::endl;
+		return 0;
+	}
 
 	circleTexture->setSmooth(true);
 	blobTexture->setSmooth(true);
