@@ -33,18 +33,18 @@ EPosGenMode lastPosGenMode = EPosGenMode::EPosGenModeCount;
 TwEnumVal posGenModeEV[] = { { EPosGenMode::Point, "Point" }, { EPosGenMode::Box, "Box" }, { EPosGenMode::Circle, "Circle" }, { EPosGenMode::Disk, "Disk" } };
 TwType posGenModeType;
 
-typedef enum { VECTOR, ANGLE, NO_VEL_GEN } VelGenMode;
-VelGenMode velGenMode = VelGenMode::ANGLE;
-VelGenMode lastVelGenMode = VelGenMode::NO_VEL_GEN;
+enum EVelGenMode { Vector, Angle, EVelGenModeCount };
+EVelGenMode velGenMode = EVelGenMode::Angle;
+EVelGenMode lastVelGenMode = EVelGenMode::EVelGenModeCount;
 
-TwEnumVal velGenModeEV[] = { { VelGenMode::VECTOR, "Vector" }, { VelGenMode::ANGLE, "Angle" } };
+TwEnumVal velGenModeEV[] = { { EVelGenMode::Vector, "Vector" }, { EVelGenMode::Angle, "Angle" } };
 TwType velGenModeType;
 
-typedef enum { ROUND, BLOB, NO_TEX } SelectedTexture;
-SelectedTexture selectedTex = SelectedTexture::ROUND;
-SelectedTexture lastSelectedTex = SelectedTexture::ROUND;
+enum ESelectedTexture { Round, Blob, NO_TEX };
+ESelectedTexture selectedTex = ESelectedTexture::Round;
+ESelectedTexture lastSelectedTex = ESelectedTexture::Round;
 
-TwEnumVal texEV[] = { { SelectedTexture::ROUND, "Circle" }, { SelectedTexture::BLOB, "Blob" } };
+TwEnumVal texEV[] = { { ESelectedTexture::Round, "Circle" }, { ESelectedTexture::Blob, "Blob" } };
 TwType texType;
 
 // Textures
@@ -181,9 +181,9 @@ void configurePosGen(EPosGenMode mode) {
 	}
 }
 
-void configureVelGen(VelGenMode mode) {
+void configureVelGen(EVelGenMode mode) {
 	switch (mode) {
-		case VelGenMode::VECTOR: {
+		case EVelGenMode::Vector: {
 			auto velGen = particleSystem->addGenerator<particles::VelocityGenerator>();
 			velocityGenerator = velGen;
 
@@ -197,7 +197,7 @@ void configureVelGen(VelGenMode mode) {
 
 		}
 		break;
-		case VelGenMode::ANGLE: {
+		case EVelGenMode::Angle: {
 			auto velGen = particleSystem->addGenerator<particles::AngledVelocityGenerator>();
 			velocityGenerator = velGen;
 
@@ -240,13 +240,13 @@ void updatePosGen() {
 
 void updateVelGen() {
 	if (velGenMode != lastVelGenMode) {
-		if (lastVelGenMode == VelGenMode::VECTOR) {
+		if (lastVelGenMode == EVelGenMode::Vector) {
 			TwRemoveVar(bar, "velVectorMinStartX");
 			TwRemoveVar(bar, "velVectorMinStartY");
 			TwRemoveVar(bar, "velVectorMaxStartX");
 			TwRemoveVar(bar, "velVectorMaxStartY");
 		}
-		else if (lastVelGenMode == VelGenMode::ANGLE) {
+		else if (lastVelGenMode == EVelGenMode::Angle) {
 			TwRemoveVar(bar, "velAngleMinAngle");
 			TwRemoveVar(bar, "velAngleMaxAngle");
 			TwRemoveVar(bar, "velAngleMinVel");
@@ -263,10 +263,10 @@ void updateTex() {
 	if (selectedTex != lastSelectedTex) {
 		lastSelectedTex = selectedTex;
 
-		if (selectedTex == SelectedTexture::ROUND) {
+		if (selectedTex == ESelectedTexture::Round) {
 			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(circleTexture.get());
 		}
-		else if (selectedTex == SelectedTexture::BLOB) {
+		else if (selectedTex == ESelectedTexture::Blob) {
 			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(blobTexture.get());
 		}
 	}
