@@ -40,16 +40,17 @@ EVelGenMode lastVelGenMode = EVelGenMode::EVelGenModeCount;
 TwEnumVal velGenModeEV[] = { { EVelGenMode::Vector, "Vector" }, { EVelGenMode::Angle, "Angle" } };
 TwType velGenModeType;
 
-enum ESelectedTexture { Round, Blob, NO_TEX };
+enum ESelectedTexture { Round, Blob, Star, NO_TEX };
 ESelectedTexture selectedTex = ESelectedTexture::Round;
 ESelectedTexture lastSelectedTex = ESelectedTexture::Round;
 
-TwEnumVal texEV[] = { { ESelectedTexture::Round, "Circle" }, { ESelectedTexture::Blob, "Blob" } };
+TwEnumVal texEV[] = { { ESelectedTexture::Round, "Circle" }, { ESelectedTexture::Blob, "Blob" }, { ESelectedTexture::Star, "Star" } };
 TwType texType;
 
 // Textures
 std::unique_ptr<sf::Texture> circleTexture;
 std::unique_ptr<sf::Texture> blobTexture;
+std::unique_ptr<sf::Texture> starTexture;
 
 // Render Texture used for metaball rendering
 std::unique_ptr<sf::RenderTexture> renderTexture;
@@ -269,6 +270,9 @@ void updateTex() {
 		else if (selectedTex == ESelectedTexture::Blob) {
 			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(blobTexture.get());
 		}
+		else if (selectedTex == ESelectedTexture::Star) {
+			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(starTexture.get());
+		}
 	}
 }
 
@@ -290,7 +294,7 @@ void updateRenderMode() {
 
 			TwAddVarRW(bar, "BlendMode", TW_TYPE_BOOL8, &((particles::TextureParticleSystem *)particleSystem.get())->additiveBlendMode, " group='Texture' label='Additive Blend Mode' ");
 
-			texType = TwDefineEnum("TexType", texEV, 2);
+			texType = TwDefineEnum("TexType", texEV, 3);
 			TwAddVarRW(bar, "SelectedTex", texType, &selectedTex, " group='Texture' label='Used Texture' ");
 		}
 		else if (renderMode == ERenderMode::MetaballRendering) {
@@ -328,11 +332,16 @@ int main() {
 
 	circleTexture.reset(new sf::Texture());
 	blobTexture.reset(new sf::Texture());
+	starTexture.reset(new sf::Texture());
 	if (!circleTexture->loadFromFile("res/circleTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
 		wrongDir = true;
 	}
 	if (!blobTexture->loadFromFile("res/blobTexture.png")) {
+		std::cout << "Invalid path to texture." << std::endl;
+		wrongDir = true;
+	}
+	if (!starTexture->loadFromFile("res/starTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
 		wrongDir = true;
 	}
@@ -344,6 +353,7 @@ int main() {
 
 	circleTexture->setSmooth(true);
 	blobTexture->setSmooth(true);
+	starTexture->setSmooth(true);
 	
 	sf::Clock clock;
 
