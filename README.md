@@ -7,7 +7,6 @@ There are three different rendering styles to choose from:
 * Metaball rendering
 
 <img src="screenshots/screenshot1.png" align="center" height="400" >
-<p align="center">Textured rendering</p>
 
 ## Used Libraries
 
@@ -39,8 +38,11 @@ The particle system is based on a [tutorial series](http://www.bfilipek.com/2014
 
 The Metaball rendering technique is inspired by [this tutorial](http://nullcandy.com/2d-metaballs-in-xna/) by NullCandy games.
 
+<img src="screenshots/screenshot3.png" align="center" height="400" >
+<p align="center">Textured rendering</p>
+
 <img src="screenshots/screenshot2.png" align="center" height="400" >
 <p align="center">Textured rendering with additive blend mode enabled</p>
 
-<img src="screenshots/screenshot3.png" align="center" height="400" >
+<img src="screenshots/screenshot4.png" align="center" height="400" >
 <p align="center">Metaball rendering</p>
