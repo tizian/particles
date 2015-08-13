@@ -9,7 +9,7 @@ namespace particles
 	class ParticleSystem : public sf::Transformable
 	{
 	public:
-		ParticleSystem(size_t maxCount);
+		ParticleSystem(int maxCount);
 		virtual ~ParticleSystem() {}
 
 		ParticleSystem(const ParticleSystem &) = delete;
@@ -20,33 +20,31 @@ namespace particles
 
 		virtual void reset();
 
-		virtual size_t numAllParticles() const { return m_particles.count; }
-		virtual size_t numAliveParticles() const { return m_particles.countAlive; }
+		virtual int numAllParticles() const { return m_particles.count; }
+		virtual int numAliveParticles() const { return m_particles.countAlive; }
 
 		template<typename T>
-		std::shared_ptr<T> addGenerator()
-		{
+		inline std::shared_ptr<T> addGenerator() {
 			auto g = std::make_shared<T>();
 			m_generators.push_back(g);
 			return g;
 		}
 
 		template<typename T>
-		std::shared_ptr<T> addUpdater()
-		{
+		inline std::shared_ptr<T> addUpdater() {
 			auto u = std::make_shared<T>();
 			m_updaters.push_back(u);
 			return u;
 		}
 
-		void emit(int maxCount);	// emit a fix number of particles
-		void emit(float dt);		// emit a stream of particles defined by emitRate and dt
+		void emit(int maxCount);		// emit a fix number of particles
+		void emit(float dt);			// emit a stream of particles defined by emitRate and dt
 
 	public:
 		float	emitRate{ 0.0f };		// Note: For a constant particle stream, it should hold that: emitRate <= (maximalParticleCount / averageParticleLifetime)
 
 	protected:
-		size_t m_count;
+		int m_count;
 
 		ParticleData m_particles;
 		sf::VertexArray m_vertices;
@@ -58,7 +56,7 @@ namespace particles
 	class PointParticleSystem : public ParticleSystem
 	{
 	public:
-		PointParticleSystem(size_t maxCount);
+		PointParticleSystem(int maxCount);
 		virtual ~PointParticleSystem() {}
 
 		PointParticleSystem(const PointParticleSystem &) = delete;
@@ -71,7 +69,7 @@ namespace particles
 	class TextureParticleSystem : public ParticleSystem
 	{
 	public:
-		TextureParticleSystem(size_t maxCount, sf::Texture *texture);
+		TextureParticleSystem(int maxCount, sf::Texture *texture);
 		virtual ~TextureParticleSystem() {}
 
 		TextureParticleSystem(const TextureParticleSystem &) = delete;
@@ -92,7 +90,7 @@ namespace particles
 	class MetaballParticleSystem : public TextureParticleSystem
 	{
 	public:
-		MetaballParticleSystem(size_t maxCount, sf::Texture *texture, sf::RenderTexture *renderTexture);
+		MetaballParticleSystem(int maxCount, sf::Texture *texture, sf::RenderTexture *renderTexture);
 		virtual ~MetaballParticleSystem() {}
 
 		MetaballParticleSystem(const MetaballParticleSystem &) = delete;

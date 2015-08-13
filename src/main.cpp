@@ -19,18 +19,18 @@ bool firstStart = true;
 TwBar *bar = nullptr;
 
 // Enums for application and ATB
-typedef enum { POINTS, TEXTURE, METABALLS } RenderMode;
-RenderMode renderMode = RenderMode::POINTS;
-RenderMode lastRenderMode = RenderMode::TEXTURE;
+enum ERenderMode { PointRendering, TextureRendering, MetaballRendering };
+ERenderMode renderMode = ERenderMode::PointRendering;
+ERenderMode lastRenderMode = ERenderMode::TextureRendering;
 
-TwEnumVal renderModeEV[] = { { RenderMode::POINTS, "Point" }, { RenderMode::TEXTURE, "Texture" }, { RenderMode::METABALLS, "Metaballs" } };
+TwEnumVal renderModeEV[] = { { ERenderMode::PointRendering, "Point" }, { ERenderMode::TextureRendering, "Texture" }, { ERenderMode::MetaballRendering, "Metaballs" } };
 TwType renderModeType;
 
-typedef enum { POINT, BOX, CIRCLE, DISK, NO_POS_GEN } PosGenMode;
-PosGenMode posGenMode = PosGenMode::POINT;
-PosGenMode lastPosGenMode = PosGenMode::NO_POS_GEN;
+enum EPosGenMode { Point, Box, Circle, Disk, EPosGenModeCount };
+EPosGenMode posGenMode = EPosGenMode::Point;
+EPosGenMode lastPosGenMode = EPosGenMode::EPosGenModeCount;
 
-TwEnumVal posGenModeEV[] = { { PosGenMode::POINT, "Point" }, { PosGenMode::BOX, "Box" }, { PosGenMode::CIRCLE, "Circle" }, { PosGenMode::DISK, "Disk" } };
+TwEnumVal posGenModeEV[] = { { EPosGenMode::Point, "Point" }, { EPosGenMode::Box, "Box" }, { EPosGenMode::Circle, "Circle" }, { EPosGenMode::Disk, "Disk" } };
 TwType posGenModeType;
 
 typedef enum { VECTOR, ANGLE, NO_VEL_GEN } VelGenMode;
@@ -48,14 +48,14 @@ TwEnumVal texEV[] = { { SelectedTexture::ROUND, "Circle" }, { SelectedTexture::B
 TwType texType;
 
 // Textures
-sf::Texture *circleTexture = nullptr;
-sf::Texture *blobTexture = nullptr;
+std::unique_ptr<sf::Texture> circleTexture;
+std::unique_ptr<sf::Texture> blobTexture;
 
 // Render Texture used for metaball rendering
-sf::RenderTexture *renderTexture = nullptr;
+std::unique_ptr<sf::RenderTexture> renderTexture;
 
 // Particle System
-std::unique_ptr<particles::ParticleSystem> particleSystem = nullptr;
+std::unique_ptr<particles::ParticleSystem> particleSystem;
 
 // Emitter Position of Particle System
 sf::Vector2f *position = nullptr;
@@ -63,8 +63,7 @@ sf::Vector2f *position = nullptr;
 std::shared_ptr<particles::ParticleGenerator> positionGenerator;
 std::shared_ptr<particles::ParticleGenerator> velocityGenerator;
 
-void configurePS(RenderMode mode)
-{
+void configurePS(ERenderMode mode) {
 	posGenModeType = TwDefineEnum("PosGenModeType", posGenModeEV, 4);
 	TwAddVarRW(bar, "PosGenMode", posGenModeType, &posGenMode, " label='Generator Type' group='Position' ");
 
@@ -83,8 +82,7 @@ void configurePS(RenderMode mode)
 	velGen->minStartVel = 100.f;
 	velGen->maxStartVel = 100.f;
 
-	if (!firstStart)
-	{
+	if (!firstStart) {
 		TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='min. angle [deg]' ");
 		TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='max. angle [deg]' ");
 		TwAddVarRW(bar, "velAngleMinVel", TW_TYPE_FLOAT, &velGen->minStartVel, " group='Velocity' label='min. Start Velocity' ");
@@ -92,8 +90,7 @@ void configurePS(RenderMode mode)
 	}
 	firstStart = false;
 	
-	if (mode != RenderMode::POINTS)
-	{
+	if (mode != ERenderMode::PointRendering) {
 		auto sizeGen = particleSystem->addGenerator<particles::SizeGenerator>();
 		sizeGen->minStartSize = 10.0f;
 		sizeGen->maxStartSize = 30.0f;
@@ -114,8 +111,7 @@ void configurePS(RenderMode mode)
 	TwAddVarRW(bar, "timeGenMin", TW_TYPE_FLOAT, &timeGen->minTime, " min=0 max=360 group='Time' label='min. Lifetime [s]' ");
 	TwAddVarRW(bar, "timeGenMax", TW_TYPE_FLOAT, &timeGen->maxTime, " min=0 max=360 group='Time' label='max. Lifetime [s]' ");
 
-	if (mode != RenderMode::METABALLS)
-	{
+	if (mode != ERenderMode::MetaballRendering) {
 		auto colGen = particleSystem->addGenerator<particles::ColorGenerator>();
 		colGen->minStartCol = sf::Color(150, 0, 180, 255);
 		colGen->maxStartCol = sf::Color(220, 255, 220, 255);
@@ -138,118 +134,101 @@ void configurePS(RenderMode mode)
 	TwAddVarRW(bar, "eulerGlobalAccY", TW_TYPE_FLOAT, &eulerUpdater->globalAcceleration.y, "group='Physics' label='Global Acceleration (y)' ");
 }
 
-void configurePosGen(PosGenMode mode)
-{
-	switch (mode)
-	{
-	case PosGenMode::POINT:
-	{
-		auto posGen = particleSystem->addGenerator<particles::PointPositionGenerator>();
-		positionGenerator = posGen;
-		position = &posGen->center;
-
-	}
+void configurePosGen(EPosGenMode mode) {
+	switch(mode) {
+		case EPosGenMode::Point: {
+			auto posGen = particleSystem->addGenerator<particles::PointPositionGenerator>();
+			positionGenerator = posGen;
+			position = &posGen->center;
+		}
 		break;
-	case PosGenMode::BOX:
-	{
-		auto posGen = particleSystem->addGenerator<particles::BoxPositionGenerator>();
-		positionGenerator = posGen;
-		position = &posGen->center;
+		case EPosGenMode::Box: {
+			auto posGen = particleSystem->addGenerator<particles::BoxPositionGenerator>();
+			positionGenerator = posGen;
+			position = &posGen->center;
 
-		posGen->size = { 80.f, 30.f };
+			posGen->size = { 80.f, 30.f };
 
-		TwAddVarRW(bar, "posBoxSizeX", TW_TYPE_FLOAT, &posGen->size.x, "group='Position' label='size (x)' ");
-		TwAddVarRW(bar, "posBoxSizeY", TW_TYPE_FLOAT, &posGen->size.y, "group='Position' label='size (y)' ");
-
-	}
+			TwAddVarRW(bar, "posBoxSizeX", TW_TYPE_FLOAT, &posGen->size.x, "group='Position' label='size (x)' ");
+			TwAddVarRW(bar, "posBoxSizeY", TW_TYPE_FLOAT, &posGen->size.y, "group='Position' label='size (y)' ");
+		}
 		break;
-	case PosGenMode::CIRCLE:
-	{
-		auto posGen = particleSystem->addGenerator<particles::CirclePositionGenerator>();
-		positionGenerator = posGen;
-		position = &posGen->center;
+		case EPosGenMode::Circle: {
+			auto posGen = particleSystem->addGenerator<particles::CirclePositionGenerator>();
+			positionGenerator = posGen;
+			position = &posGen->center;
 
-		posGen->radius = { 70.f, 40.f };
+			posGen->radius = { 70.f, 40.f };
 
-		TwAddVarRW(bar, "posCircleRadiusX", TW_TYPE_FLOAT, &posGen->radius.x, "group='Position' label='radius (x)' ");
-		TwAddVarRW(bar, "posCircleRadiusY", TW_TYPE_FLOAT, &posGen->radius.y, "group='Position' label='radius (y)' ");
+			TwAddVarRW(bar, "posCircleRadiusX", TW_TYPE_FLOAT, &posGen->radius.x, "group='Position' label='radius (x)' ");
+			TwAddVarRW(bar, "posCircleRadiusY", TW_TYPE_FLOAT, &posGen->radius.y, "group='Position' label='radius (y)' ");
 
-	}
+		}
 		break;
-	case PosGenMode::DISK:
-	{
-		auto posGen = particleSystem->addGenerator<particles::DiskPositionGenerator>();
-		positionGenerator = posGen;
-		position = &posGen->center;
+		case EPosGenMode::Disk: {
+			auto posGen = particleSystem->addGenerator<particles::DiskPositionGenerator>();
+			positionGenerator = posGen;
+			position = &posGen->center;
 
-		posGen->radius = 150.f;
+			posGen->radius = 150.f;
 
-		TwAddVarRW(bar, "posDiskRadius", TW_TYPE_FLOAT, &posGen->radius, "group='Position' label='radius' ");
+			TwAddVarRW(bar, "posDiskRadius", TW_TYPE_FLOAT, &posGen->radius, "group='Position' label='radius' ");
 
-	}
+		}
 		break;
-	default:
+		default:
 		break;
 	}
 }
 
-void configureVelGen(VelGenMode mode)
-{
-	switch (mode)
-	{
-	case VelGenMode::VECTOR:
-	{
-		auto velGen = particleSystem->addGenerator<particles::VelocityGenerator>();
-		velocityGenerator = velGen;
+void configureVelGen(VelGenMode mode) {
+	switch (mode) {
+		case VelGenMode::VECTOR: {
+			auto velGen = particleSystem->addGenerator<particles::VelocityGenerator>();
+			velocityGenerator = velGen;
 
-		velGen->minStartVel = { 20.f, -20.f };
-		velGen->maxStartVel = { 40.f, -40.f };
+			velGen->minStartVel = { 20.f, -20.f };
+			velGen->maxStartVel = { 40.f, -40.f };
 
-		TwAddVarRW(bar, "velVectorMinStartX", TW_TYPE_FLOAT, &velGen->minStartVel.x, " group='Velocity' label='min. Start Velocity (x)' ");
-		TwAddVarRW(bar, "velVectorMinStartY", TW_TYPE_FLOAT, &velGen->minStartVel.y, " group='Velocity' label='min. Start Velocity (y)' ");
-		TwAddVarRW(bar, "velVectorMaxStartX", TW_TYPE_FLOAT, &velGen->maxStartVel.x, " group='Velocity' label='max. Start Velocity (x)' ");
-		TwAddVarRW(bar, "velVectorMaxStartY", TW_TYPE_FLOAT, &velGen->maxStartVel.y, " group='Velocity' label='max. Start Velocity (y)' ");
+			TwAddVarRW(bar, "velVectorMinStartX", TW_TYPE_FLOAT, &velGen->minStartVel.x, " group='Velocity' label='min. Start Velocity (x)' ");
+			TwAddVarRW(bar, "velVectorMinStartY", TW_TYPE_FLOAT, &velGen->minStartVel.y, " group='Velocity' label='min. Start Velocity (y)' ");
+			TwAddVarRW(bar, "velVectorMaxStartX", TW_TYPE_FLOAT, &velGen->maxStartVel.x, " group='Velocity' label='max. Start Velocity (x)' ");
+			TwAddVarRW(bar, "velVectorMaxStartY", TW_TYPE_FLOAT, &velGen->maxStartVel.y, " group='Velocity' label='max. Start Velocity (y)' ");
 
-	}
-	break;
-	case VelGenMode::ANGLE:
-	{
-		auto velGen = particleSystem->addGenerator<particles::AngledVelocityGenerator>();
-		velocityGenerator = velGen;
+		}
+		break;
+		case VelGenMode::ANGLE: {
+			auto velGen = particleSystem->addGenerator<particles::AngledVelocityGenerator>();
+			velocityGenerator = velGen;
 
-		velGen->minAngle = -20.f;
-		velGen->maxAngle = 20.f;
-		velGen->minStartVel = 100.f;
-		velGen->maxStartVel = 100.0f;
+			velGen->minAngle = -20.f;
+			velGen->maxAngle = 20.f;
+			velGen->minStartVel = 100.f;
+			velGen->maxStartVel = 100.0f;
 
-		TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='min. angle [deg]' ");
-		TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='max. angle [deg]' ");
-		TwAddVarRW(bar, "velAngleMinVel", TW_TYPE_FLOAT, &velGen->minStartVel, " group='Velocity' label='min. Start Velocity' ");
-		TwAddVarRW(bar, "velAngleMaxVel", TW_TYPE_FLOAT, &velGen->maxStartVel, " group='Velocity' label='max. Start Velocity' ");
+			TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='min. angle [deg]' ");
+			TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='max. angle [deg]' ");
+			TwAddVarRW(bar, "velAngleMinVel", TW_TYPE_FLOAT, &velGen->minStartVel, " group='Velocity' label='min. Start Velocity' ");
+			TwAddVarRW(bar, "velAngleMaxVel", TW_TYPE_FLOAT, &velGen->maxStartVel, " group='Velocity' label='max. Start Velocity' ");
 
-	}
-	break;
-	default:
+		}
+		break;
+		default:
 		break;
 	}
 }
 
-void updatePosGen()
-{
-	if (posGenMode != lastPosGenMode)
-	{
-		if (lastPosGenMode == PosGenMode::BOX)
-		{
+void updatePosGen() {
+	if (posGenMode != lastPosGenMode) {
+		if (lastPosGenMode == EPosGenMode::Box) {
 			TwRemoveVar(bar, "posBoxSizeX");
 			TwRemoveVar(bar, "posBoxSizeY");
 		}
-		else if (lastPosGenMode == PosGenMode::CIRCLE)
-		{
+		else if (lastPosGenMode == EPosGenMode::Circle) {
 			TwRemoveVar(bar, "posCircleRadiusX");
 			TwRemoveVar(bar, "posCircleRadiusY");
 		}
-		else if (lastPosGenMode == PosGenMode::DISK)
-		{
+		else if (lastPosGenMode == EPosGenMode::Disk) {
 			TwRemoveVar(bar, "posDiskRadius");
 		}
 
@@ -259,19 +238,15 @@ void updatePosGen()
 	}
 }
 
-void updateVelGen()
-{
-	if (velGenMode != lastVelGenMode)
-	{
-		if (lastVelGenMode == VelGenMode::VECTOR)
-		{
+void updateVelGen() {
+	if (velGenMode != lastVelGenMode) {
+		if (lastVelGenMode == VelGenMode::VECTOR) {
 			TwRemoveVar(bar, "velVectorMinStartX");
 			TwRemoveVar(bar, "velVectorMinStartY");
 			TwRemoveVar(bar, "velVectorMaxStartX");
 			TwRemoveVar(bar, "velVectorMaxStartY");
 		}
-		else if (lastVelGenMode == VelGenMode::ANGLE)
-		{
+		else if (lastVelGenMode == VelGenMode::ANGLE) {
 			TwRemoveVar(bar, "velAngleMinAngle");
 			TwRemoveVar(bar, "velAngleMaxAngle");
 			TwRemoveVar(bar, "velAngleMinVel");
@@ -284,27 +259,21 @@ void updateVelGen()
 	}
 }
 
-void updateTex()
-{
-	if (selectedTex != lastSelectedTex)
-	{
+void updateTex() {
+	if (selectedTex != lastSelectedTex) {
 		lastSelectedTex = selectedTex;
 
-		if (selectedTex == SelectedTexture::ROUND)
-		{
-			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(circleTexture);
+		if (selectedTex == SelectedTexture::ROUND) {
+			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(circleTexture.get());
 		}
-		else if (selectedTex == SelectedTexture::BLOB)
-		{
-			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(blobTexture);
+		else if (selectedTex == SelectedTexture::BLOB) {
+			((particles::TextureParticleSystem *)particleSystem.get())->setTexture(blobTexture.get());
 		}
 	}
 }
 
-void updateRenderMode()
-{
-	if (renderMode != lastRenderMode)
-	{
+void updateRenderMode() {
+	if (renderMode != lastRenderMode) {
 		lastRenderMode = renderMode;
 
 		TwRemoveAllVars(bar);
@@ -312,13 +281,11 @@ void updateRenderMode()
 		renderModeType = TwDefineEnum("RenderModeType", renderModeEV, 3);
 		TwAddVarRW(bar, "RenderMode", renderModeType, &renderMode, " group='General' label='Render Mode' ");
 
-		if (renderMode == RenderMode::POINTS)
-		{
+		if (renderMode == ERenderMode::PointRendering) {
 			particleSystem.reset(new particles::PointParticleSystem(10000));
 		}
-		else if (renderMode == RenderMode::TEXTURE)
-		{
-			particleSystem.reset(new particles::TextureParticleSystem(10000, circleTexture));
+		else if (renderMode == ERenderMode::TextureRendering) {
+			particleSystem.reset(new particles::TextureParticleSystem(10000, circleTexture.get()));
 			((particles::TextureParticleSystem *)particleSystem.get())->additiveBlendMode = false;
 
 			TwAddVarRW(bar, "BlendMode", TW_TYPE_BOOL8, &((particles::TextureParticleSystem *)particleSystem.get())->additiveBlendMode, " group='Texture' label='Additive Blend Mode' ");
@@ -326,9 +293,8 @@ void updateRenderMode()
 			texType = TwDefineEnum("TexType", texEV, 2);
 			TwAddVarRW(bar, "SelectedTex", texType, &selectedTex, " group='Texture' label='Used Texture' ");
 		}
-		else if (renderMode == RenderMode::METABALLS)
-		{
-			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture, renderTexture));
+		else if (renderMode == ERenderMode::MetaballRendering) {
+			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), renderTexture.get()));
 			((particles::MetaballParticleSystem *)particleSystem.get())->color = sf::Color(20, 50, 100, 255);
 
 			TwAddVarRW(bar, "Threshold", TW_TYPE_FLOAT, &((particles::MetaballParticleSystem *)particleSystem.get())->threshold, " min=0.1 max=0.9 step=0.1 group='Metaball' ");
@@ -342,15 +308,14 @@ void updateRenderMode()
 	}
 }
 
-int main()
-{
+int main() {
 	bool wrongDir = false;
 
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Particles");
 	window.setVerticalSyncEnabled(true);
 
-	renderTexture = new sf::RenderTexture();
+	renderTexture.reset(new sf::RenderTexture());
 	renderTexture->create(WIDTH, HEIGHT);
 
 	TwInit(TW_OPENGL, NULL);
@@ -361,21 +326,18 @@ int main()
 	TwDefine(" GLOBAL help='2D Particle Test Application' ");
 	TwDefine(" Particles size='300 500' ");
 
-	circleTexture = new sf::Texture();
-	blobTexture = new sf::Texture();
-	if (!circleTexture->loadFromFile("res/circleTexture.png"))
-	{
+	circleTexture.reset(new sf::Texture());
+	blobTexture.reset(new sf::Texture());
+	if (!circleTexture->loadFromFile("res/circleTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
 		wrongDir = true;
 	}
-	if (!blobTexture->loadFromFile("res/blobTexture.png"))
-	{
+	if (!blobTexture->loadFromFile("res/blobTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
 		wrongDir = true;
 	}
 
-	if (wrongDir)
-	{
+	if (wrongDir) {
 		std::cerr << "Please use the 'particles' root directory as working directory." << std::endl;
 		return 0;
 	}
@@ -385,24 +347,21 @@ int main()
 	
 	sf::Clock clock;
 
-	while (window.isOpen())
-	{
+	while (window.isOpen()) {
 		sf::Event event;
-		while (window.pollEvent(event))
-		{
+		while (window.pollEvent(event)) {
 			int handled = TwEventSFML_Custom(&event);
-			if (!handled)
-			{
-				if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape))
+			if (!handled) {
+				if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
 					window.close();
+				}
 			}	
 		}
 
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
 
-		if (position)
-		{
+		if (position) {
 			position->x = pos.x; position->y = pos.y;
 		}
 
@@ -421,10 +380,6 @@ int main()
 	}
 
 	TwTerminate();
-
-	delete circleTexture;
-	delete blobTexture;
-	delete renderTexture;
 
 	return 0;
 }

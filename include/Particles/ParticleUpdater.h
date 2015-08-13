@@ -2,17 +2,15 @@
 
 #include "ParticleData.h"
 
-class SimulatedWaterTile;
-
 namespace particles
 {
 	class ParticleUpdater
 	{
 	public:
-		ParticleUpdater() { }
-		virtual ~ParticleUpdater() { }
+		ParticleUpdater() {}
+		virtual ~ParticleUpdater() {}
 
-		virtual void update(float dt, ParticleData *p) = 0;
+		virtual void update(ParticleData *data, float dt) = 0;
 	};
 
 
@@ -22,7 +20,7 @@ namespace particles
 		EulerUpdater() {}
 		~EulerUpdater() {}
 
-		void update(float dt, ParticleData *p);
+		void update(ParticleData *data, float dt);
 
 	public:
 		sf::Vector2f globalAcceleration{ 0.0f, 0.0f };
@@ -35,7 +33,7 @@ namespace particles
 		FloorUpdater() {}
 		~FloorUpdater() {}
 
-		void update(float dt, ParticleData *p);
+		void update(ParticleData *data, float dt);
 
 	public:
 		float floorY{ 0.0f };
@@ -49,10 +47,11 @@ namespace particles
 		AttractorUpdater() {}
 		~AttractorUpdater() {}
 
-		void update(float dt, ParticleData *p);
-		size_t numAttractors() const { return m_attractors.size(); }
+		void update(ParticleData *data, float dt);
+
+		int numAttractors() const { return m_attractors.size(); }
 		void add(const sf::Vector3f &attr) { m_attractors.push_back(attr); }
-		sf::Vector3f &get(size_t id) { return m_attractors[id]; }
+		sf::Vector3f &get(int id) { return m_attractors[id]; }
 
 	protected:
 		std::vector<sf::Vector3f> m_attractors;	// .xy is position, .z is force
@@ -65,7 +64,7 @@ namespace particles
 		SizeUpdater() {}
 		~SizeUpdater() {}
 
-		void update(float dt, ParticleData *p);
+		void update(ParticleData *data, float dt);
 	};
 
 
@@ -75,7 +74,7 @@ namespace particles
 		ColorUpdater() {}
 		~ColorUpdater() {}
 
-		void update(float dt, ParticleData *p);
+		void update(ParticleData *data, float dt);
 	};
 
 
@@ -85,6 +84,6 @@ namespace particles
 		TimeUpdater() {}
 		~TimeUpdater() {}
 
-		void update(float dt, ParticleData *p);
+		void update(ParticleData *data, float dt);
 	};
 }
