@@ -37,7 +37,7 @@ If the libraries are not installed in standard paths, it might be necessary to s
 
 The particle system is based on a [tutorial series](http://www.bfilipek.com/2014/03/three-particle-effects.html) by Bartlomiej Filipek.
 
-The Metaball rendering technique is losely based on [this tutorial](http://nullcandy.com/2d-metaballs-in-xna/) by NullCandy games.
+The Metaball rendering technique is inspired by [this tutorial](http://nullcandy.com/2d-metaballs-in-xna/) by NullCandy games.
 
 <img src="screenshots/screenshot2.png" align="center" height="400" >
 <p align="center">Textured rendering with additive blend mode enabled</p>
