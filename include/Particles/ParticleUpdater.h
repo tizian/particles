@@ -87,18 +87,4 @@ namespace particles
 
 		void update(float dt, ParticleData *p);
 	};
-
-	
-	// TODO: Keep "Cendric-specific" Particle classes separate?
-	class SimulatedWaterUpdater : public ParticleUpdater
-	{
-	public:
-		SimulatedWaterUpdater() {}
-		~SimulatedWaterUpdater() {}
-
-		void update(float dt, ParticleData *p);
-	
-	public:
-		SimulatedWaterTile *water = nullptr;
-	};
 }

@@ -80,11 +80,13 @@ namespace particles
 		virtual void update(const sf::Time &dt) override;
 		virtual void render(sf::RenderTarget& renderTarget) override;
 
-		void setAdditiveBlendMode(bool blendMode) { m_additiveBlendMode = blendMode; }
+		void setTexture(sf::Texture *texture);
+
+	public:
+		bool additiveBlendMode;
 
 	protected:
 		sf::Texture *m_texture;
-		bool m_additiveBlendMode;
 	};
 
 	class MetaballParticleSystem : public TextureParticleSystem

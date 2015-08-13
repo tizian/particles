@@ -26,10 +26,27 @@ namespace particles
 
 	inline sf::Color randomColor(const sf::Color &low, const sf::Color &high)
 	{
-		sf::Uint8 r = (rand() % (int)(high.r - low.r + 1)) + low.r;
-		sf::Uint8 g = (rand() % (int)(high.g - low.g + 1)) + low.g;
-		sf::Uint8 b = (rand() % (int)(high.b - low.b + 1)) + low.b;
-		sf::Uint8 a = (rand() % (int)(high.a - low.a + 1)) + low.a;
+		sf::Uint64 r, g, b, a;
+
+		if (high.r <= low.r)
+			r = high.r;
+		else
+			r = (rand() % (int)(high.r - low.r + 1)) + low.r;
+
+		if (high.g <= low.g)
+			g = high.g;
+		else
+			g = (rand() % (int)(high.g - low.g + 1)) + low.g;
+
+		if (high.b <= low.b)
+			b = high.b;
+		else
+			b = (rand() % (int)(high.b - low.b + 1)) + low.b;
+
+		if (high.a <= low.a)
+			a = high.a;
+		else
+			(rand() % (int)(high.a - low.a + 1)) + low.a;
 
 		return sf::Color(r, g, b, a);
 	}
@@ -77,7 +94,7 @@ namespace particles
 		for (size_t i = startId; i < endId; ++i)
 		{
 			float phi = randomFloat(0.0f, M_PI * 2.0f);
-			float r = std::sqrt(randomFloat(0.0f, radius));
+			float r = randomFloat(0.0f, radius);
 			p->pos[i] = { center.x + r * std::sin(phi), center.y + r * std::cos(phi) };
 		}
 	}

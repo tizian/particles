@@ -105,7 +105,20 @@ namespace particles
 			m_vertices[4 * i + 3].color = sf::Color::White;
 		}
 
-		m_additiveBlendMode = false;
+		additiveBlendMode = false;
+	}
+
+	void TextureParticleSystem::setTexture(sf::Texture *texture)
+	{
+		m_texture = texture;
+
+		for (size_t i = 0; i < m_particles.count; ++i)
+		{
+			m_vertices[4 * i + 0].texCoords.x = 0.0f;	m_vertices[4 * i + 0].texCoords.y = 0.0f;
+			m_vertices[4 * i + 1].texCoords.x = (float)m_texture->getSize().x;	m_vertices[4 * i + 1].texCoords.y = 0.0f;
+			m_vertices[4 * i + 2].texCoords.x = (float)m_texture->getSize().x;	m_vertices[4 * i + 2].texCoords.y = (float)m_texture->getSize().y;
+			m_vertices[4 * i + 3].texCoords.x = 0.0f;	m_vertices[4 * i + 3].texCoords.y = (float)m_texture->getSize().y;
+		}
 	}
 
 	void TextureParticleSystem::update(const sf::Time &dt)
@@ -130,7 +143,7 @@ namespace particles
 	{
 		sf::RenderStates states = sf::RenderStates::Default;
 
-		if (m_additiveBlendMode)
+		if (additiveBlendMode)
 			states.blendMode = sf::BlendAdd;
 
 		states.texture = m_texture;
@@ -167,7 +180,7 @@ namespace particles
 
 	MetaballParticleSystem::MetaballParticleSystem(size_t maxCount, sf::Texture *texture, sf::RenderTexture *renderTexture) : TextureParticleSystem(maxCount, texture), m_renderTexture(renderTexture)
 	{
-		m_additiveBlendMode = true;
+		additiveBlendMode = true;
 		m_shader.setParameter("texture", sf::Shader::CurrentTexture);
 		m_shader.loadFromMemory(vertexShader, fragmentShader);
 	}
