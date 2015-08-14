@@ -44,7 +44,8 @@ namespace particles
 		float	emitRate{ 0.0f };		// Note: For a constant particle stream, it should hold that: emitRate <= (maximalParticleCount / averageParticleLifetime)
 
 	protected:
-		int m_count;
+		float m_dt{ 0.0f };
+		int m_count{ 0 };
 
 		ParticleData m_particles;
 		sf::VertexArray m_vertices;

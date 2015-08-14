@@ -321,6 +321,17 @@ void updateRenderMode() {
 }
 
 int main() {
+	float dt = 1.f / 60.f;
+	float a = 2.3f * dt;
+
+	int n = static_cast<int>(a / dt);
+	float rem = std::fmod(a, dt);
+
+	std::cout << a << std::endl;
+	std::cout << "n: " << n << std::endl;
+	std::cout << "rem: " << rem << std::endl;
+	std::cout << "real rem: " << a - n * dt << std::endl;
+
 	bool wrongDir = false;
 
 	// create the window

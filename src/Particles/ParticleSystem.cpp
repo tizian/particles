@@ -9,7 +9,17 @@ namespace particles
 	}
 
 	void ParticleSystem::emit(float dt) {
-		const int maxNewParticles = static_cast<int>(dt * emitRate);
+		m_dt += dt;
+
+		int maxNewParticles = 0;
+
+		if (m_dt * emitRate > 1.0f) {
+			maxNewParticles = static_cast<int>(m_dt * emitRate);
+			m_dt -= maxNewParticles / emitRate;
+		}
+
+		if (maxNewParticles == 0) return;
+
 		const int startId = m_particles.countAlive;
 		const int endId = std::min(startId + maxNewParticles, m_particles.count - 1);
 
