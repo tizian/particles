@@ -7,8 +7,6 @@
 
 #include "Particles/ParticleSystem.h"
 
-using namespace std;
-
 // Window size
 const int WIDTH = 1280;
 const int HEIGHT = 720;
@@ -289,6 +287,7 @@ void updateRenderMode() {
 			particleSystem.reset(new particles::PointParticleSystem(10000));
 		}
 		else if (renderMode == ERenderMode::TextureRendering) {
+			selectedTex = ESelectedTexture::Round;
 			particleSystem.reset(new particles::TextureParticleSystem(10000, circleTexture.get()));
 			((particles::TextureParticleSystem *)particleSystem.get())->additiveBlendMode = false;
 
