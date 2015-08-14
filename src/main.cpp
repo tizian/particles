@@ -284,10 +284,16 @@ void updateRenderMode() {
 		TwAddVarRW(bar, "RenderMode", renderModeType, &renderMode, " group='General' label='Render Mode' ");
 
 		if (renderMode == ERenderMode::PointRendering) {
+			posGenMode = EPosGenMode::Point;
+			velGenMode = EVelGenMode::Angle;
+
 			particleSystem.reset(new particles::PointParticleSystem(10000));
 		}
 		else if (renderMode == ERenderMode::TextureRendering) {
+			posGenMode = EPosGenMode::Point;
+			velGenMode = EVelGenMode::Angle;
 			selectedTex = ESelectedTexture::Round;
+
 			particleSystem.reset(new particles::TextureParticleSystem(10000, circleTexture.get()));
 			((particles::TextureParticleSystem *)particleSystem.get())->additiveBlendMode = false;
 
@@ -296,6 +302,9 @@ void updateRenderMode() {
 			TwAddVarRW(bar, "SelectedTex", TW_TYPE_SELECTED_TEXTURE, &selectedTex, " group='Texture' label='Used Texture' ");
 		}
 		else if (renderMode == ERenderMode::MetaballRendering) {
+			posGenMode = EPosGenMode::Point;
+			velGenMode = EVelGenMode::Angle;
+
 			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), renderTexture.get()));
 			((particles::MetaballParticleSystem *)particleSystem.get())->color = sf::Color(20, 50, 100, 255);
 
