@@ -23,15 +23,15 @@ namespace particles
 		const int endId = data->countAlive;
 
 		for (int i = 0; i < endId; ++i) {
-			data->acc[i] += dt * globalAcceleration;
-		}
-
-		for (int i = 0; i < endId; ++i) {
-			data->vel[i] += dt * data->acc[i];
+			data->acc[i] += globalAcceleration;
 		}
 
 		for (int i = 0; i < endId; ++i) {
 			data->pos[i] += dt * data->vel[i];
+		}
+
+		for (int i = 0; i < endId; ++i) {
+			data->vel[i] += dt * data->acc[i];
 		}
 	}
 

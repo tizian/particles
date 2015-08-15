@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ParticleData.h"
-#include "ParticleUpdater.h"
-#include "ParticleGenerator.h"
+#include "Particles/ParticleData.h"
+#include "Particles/ParticleUpdater.h"
+#include "Particles/ParticleGenerator.h"
 
 namespace particles
 {

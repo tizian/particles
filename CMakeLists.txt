@@ -20,11 +20,12 @@ include_directories(
 	"${SFML_INCLUDE_DIR}"
 	"${ANT_TWEAK_BAR_INCLUDE_PATH}"
 	"${PROJECT_SOURCE_DIR}/include"
+	"${PROJECT_SOURCE_DIR}"
 )
 
 file(GLOB_RECURSE particles_FILES
-	"${PROJECT_SOURCE_DIR}/include/*.h"
 	"${PROJECT_SOURCE_DIR}/src/*.cpp"
+	"${PROJECT_SOURCE_DIR}/Particles/*.cpp"
 )
 
 add_executable(particles ${particles_FILES})
