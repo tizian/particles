@@ -57,9 +57,6 @@ std::unique_ptr<sf::Texture> circleTexture;
 std::unique_ptr<sf::Texture> blobTexture;
 std::unique_ptr<sf::Texture> starTexture;
 
-// Render Texture used for metaball rendering
-std::unique_ptr<sf::RenderTexture> renderTexture;
-
 // Particle System
 std::unique_ptr<particles::ParticleSystem> particleSystem;
 
@@ -305,7 +302,7 @@ void updateRenderMode() {
 			posGenMode = EPosGenMode::Point;
 			velGenMode = EVelGenMode::Angle;
 
-			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), renderTexture.get()));
+			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), WIDTH, HEIGHT));
 			((particles::MetaballParticleSystem *)particleSystem.get())->color = sf::Color(20, 50, 100, 255);
 
 			TwAddVarRW(bar, "threshold", TW_TYPE_FLOAT, &((particles::MetaballParticleSystem *)particleSystem.get())->threshold, " min=0.1 max=0.9 step=0.1 group='Metaball' label='Threshold' ");
@@ -326,9 +323,6 @@ int main() {
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Particles");
 	window.setVerticalSyncEnabled(true);
-
-	renderTexture.reset(new sf::RenderTexture());
-	renderTexture->create(WIDTH, HEIGHT);
 
 	TwInit(TW_OPENGL, NULL);
 	TwWindowSize(WIDTH, HEIGHT);
