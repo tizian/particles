@@ -63,8 +63,8 @@ std::unique_ptr<particles::ParticleSystem> particleSystem;
 // Emitter Position of Particle System
 sf::Vector2f *position = nullptr;
 
-std::shared_ptr<particles::ParticleGenerator> positionGenerator;
-std::shared_ptr<particles::ParticleGenerator> velocityGenerator;
+particles::ParticleGenerator *positionGenerator;
+particles::ParticleGenerator *velocityGenerator;
 
 void configurePS(ERenderMode mode) {
 	TwAddVarRW(bar, "PosGenMode", TW_TYPE_POS_GEN_MODE, &posGenMode, " group='Position' label='Generator Type' ");
