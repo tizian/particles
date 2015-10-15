@@ -26,7 +26,7 @@ make
 ```
 and
 ```
-./particles/build/particles
+./build/particles
 ```
 Make sure to use the 'particles' root directory as your working directory when running the application.
 
