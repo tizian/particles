@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 
 project(particles)
 
-option(PARTICLES_BUILD_DEMO "Build demo application" ON)
+option(PARTICLES_BUILD_DEMO "Build demo application" OFF)
 
 if(WIN32)
 	include(CheckCXXCompilerFlag)
