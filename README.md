@@ -1,5 +1,5 @@
 # Particles
-Small application for experimenting with 2D particle effects.
+Small library for 2D particle effects based on SFML.
 
 There are three different rendering styles to choose from:
 * Point based (single pixels only)
@@ -8,29 +8,25 @@ There are three different rendering styles to choose from:
 
 <img src="screenshots/screenshot1.png" align="center" height="400" >
 
-## Used Libraries
+## Building
 
-* SFML : Window creation and rendering
-* AntTweakBar: GUI
+The recommended way to compile is using cmake. Don't forget to clone the repository with all dependencies.
 
-## How to run
-
-The recommended way to compile and run is using cmake.
-
-If both required libraries are installed, running the application should be as simple as:
 ```
+git clone https://github.com/tizian/particles.git --recursive
+cd particles
 mkdir build
 cd build
 cmake ..
 make
 ```
-and
-```
-./build/particles
-```
-Make sure to use the 'particles' root directory as your working directory when running the application.
 
-If the libraries are not installed in standard paths, it might be necessary to set up `SFML_ROOT` and `ANT_TWEAK_BAR_ROOT` as either an environment or cmake variables, so that cmake can find them.
+Optionally, the `PARTICLES_BUILD_DEMO` cmake flag can be set to build a small demo application to experiment with the particle systems. Note that this requires the AntTweakBar library installed and `ANT_TWEAK_BAR_ROOT` either set as an environment variable or a cmake flag. 
+
+## Used Libraries
+
+* SFML : Window creation and rendering
+* AntTweakBar: GUI (optional, used for demo application only)
 
 ## Acknowledgements
 
