@@ -27,17 +27,33 @@ namespace particles
 	};
 
 
-	class FloorUpdater : public ParticleUpdater
+	class HorizontalCollider : public ParticleUpdater
 	{
 	public:
-		FloorUpdater() {}
-		~FloorUpdater() {}
+		HorizontalCollider() {}
+		~HorizontalCollider() {}
 
 		void update(ParticleData *data, float dt);
 
 	public:
-		float floorY{ 0.0f };
+		float pos{ 0.0f };
 		float bounceFactor{ 0.5f };
+		bool  invert{ false };
+	};
+
+
+	class VerticalCollider : public ParticleUpdater
+	{
+	public:
+		VerticalCollider() {}
+		~VerticalCollider() {}
+
+		void update(ParticleData *data, float dt);
+
+	public:
+		float pos{ 0.0f };
+		float bounceFactor{ 0.5f };
+		bool  invert{ false };
 	};
 
 
