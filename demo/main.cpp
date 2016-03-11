@@ -337,9 +337,9 @@ int main() {
 	TW_TYPE_SELECTED_TEXTURE = TwDefineEnum("TexType", texEV, 3);
 	TW_TYPE_VECTOR2F = TwDefineStruct("Vector2f", vector2fMembers, 2, sizeof(sf::Vector2f), NULL, NULL);
 
-	circleTexture.reset(new sf::Texture());
-	blobTexture.reset(new sf::Texture());
-	starTexture.reset(new sf::Texture());
+	circleTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
+	blobTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
+	starTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
 	if (!circleTexture->loadFromFile("res/circleTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
 		wrongDir = true;
