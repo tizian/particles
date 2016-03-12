@@ -3,8 +3,12 @@ Small library for 2D particle effects based on SFML.
 
 There are three different rendering styles to choose from:
 * Point based (single pixels only)
-* Texture based (using textured quads)
 * Metaball rendering
+* Texture based (using textured quads)
+  * Static texture
+  * Spritesheet
+  * Animated spritesheet
+
 
 <img src="screenshots/screenshot1.png" align="center" height="400" >
 
@@ -45,3 +49,6 @@ The Metaball rendering technique is inspired by [this tutorial](http://nullcandy
 
 <img src="screenshots/screenshot4.png" align="center" height="400" >
 <p align="center">Metaball rendering</p>
+
+<img src="screenshots/screenshot6.png" align="center" height="400" >
+<p align="center">Spritesheet texture</p>
