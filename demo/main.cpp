@@ -17,32 +17,50 @@ bool firstStart = true;
 TwBar *bar = nullptr;
 
 // Enums for application and ATB
-enum ERenderMode { PointRendering, TextureRendering, MetaballRendering };
+enum ERenderMode { PointRendering, TextureRendering, MetaballRendering, SpritesheetRendering, AnimatedRendering };
 ERenderMode renderMode = ERenderMode::PointRendering;
 ERenderMode lastRenderMode = ERenderMode::TextureRendering;
 
-TwEnumVal renderModeEV[] = { { ERenderMode::PointRendering, "Point" }, { ERenderMode::TextureRendering, "Texture" }, { ERenderMode::MetaballRendering, "Metaballs" } };
+TwEnumVal renderModeEV[] = {
+	{ ERenderMode::PointRendering, "Point" },
+	{ ERenderMode::TextureRendering, "Texture" },
+	{ ERenderMode::MetaballRendering, "Metaballs" },
+	{ ERenderMode::SpritesheetRendering, "Spritesheet" },
+	{ ERenderMode::AnimatedRendering, "Animation" }
+};
 TwType renderModeType;
 
 enum EPosGenMode { Point, Box, Circle, Disk, EPosGenModeCount };
 EPosGenMode posGenMode = EPosGenMode::Point;
 EPosGenMode lastPosGenMode = EPosGenMode::EPosGenModeCount;
 
-TwEnumVal posGenModeEV[] = { { EPosGenMode::Point, "Point" }, { EPosGenMode::Box, "Box" }, { EPosGenMode::Circle, "Circle" }, { EPosGenMode::Disk, "Disk" } };
+TwEnumVal posGenModeEV[] = {
+	{ EPosGenMode::Point, "Point" },
+	{ EPosGenMode::Box, "Box" },
+	{ EPosGenMode::Circle, "Circle" },
+	{ EPosGenMode::Disk, "Disk" }
+};
 TwType TW_TYPE_POS_GEN_MODE;
 
 enum EVelGenMode { Vector, Angle, EVelGenModeCount };
 EVelGenMode velGenMode = EVelGenMode::Angle;
 EVelGenMode lastVelGenMode = EVelGenMode::EVelGenModeCount;
 
-TwEnumVal velGenModeEV[] = { { EVelGenMode::Vector, "Vector" }, { EVelGenMode::Angle, "Angle" } };
+TwEnumVal velGenModeEV[] = {
+	{ EVelGenMode::Vector, "Vector" },
+	{ EVelGenMode::Angle, "Angle" }
+};
 TwType TW_TYPE_VEL_GEN_MODE;
 
 enum ESelectedTexture { Round, Blob, Star, NO_TEX };
 ESelectedTexture selectedTex = ESelectedTexture::Round;
 ESelectedTexture lastSelectedTex = ESelectedTexture::Round;
 
-TwEnumVal texEV[] = { { ESelectedTexture::Round, "Circle" }, { ESelectedTexture::Blob, "Blob" }, { ESelectedTexture::Star, "Star" } };
+TwEnumVal texEV[] = {
+	{ ESelectedTexture::Round, "Circle" },
+	{ ESelectedTexture::Blob, "Blob" },
+	{ ESelectedTexture::Star, "Star" }
+};
 TwType TW_TYPE_SELECTED_TEXTURE;
 
 // Struct definitions for ATB
@@ -56,6 +74,7 @@ TwType TW_TYPE_VECTOR2F;
 std::unique_ptr<sf::Texture> circleTexture;
 std::unique_ptr<sf::Texture> blobTexture;
 std::unique_ptr<sf::Texture> starTexture;
+std::unique_ptr<sf::Texture> spritesheetTexture;
 
 // Particle System
 std::unique_ptr<particles::ParticleSystem> particleSystem;
@@ -140,6 +159,27 @@ void configurePS(ERenderMode mode) {
 
 	TwAddVarRW(bar, "eulerGlobalAcc", TW_TYPE_VECTOR2F, &eulerUpdater->globalAcceleration, "group='Physics' label='Global Acceleration' ");
 	TwAddVarRW(bar, "pos", TW_TYPE_FLOAT, &verticalCollider->pos, "group='Physics' label='collider position' ");
+
+	if (mode == ERenderMode::SpritesheetRendering) {
+		auto texCoordGen = particleSystem->addGenerator<particles::TexCoordsRandomGenerator>();
+		texCoordGen->texCoords.push_back(sf::IntRect(0, 0, 8, 8));
+		texCoordGen->texCoords.push_back(sf::IntRect(8, 0, 8, 8));
+		texCoordGen->texCoords.push_back(sf::IntRect(16, 0, 8, 8));
+		texCoordGen->texCoords.push_back(sf::IntRect(24, 0, 8, 8));
+	}
+	else if (mode == ERenderMode::AnimatedRendering) {
+		auto texCoordGen = particleSystem->addGenerator<particles::TexCoordsGenerator>();
+		texCoordGen->texCoords = sf::IntRect(0, 0, 8, 8);
+
+		auto animationUpdater = particleSystem->addUpdater<particles::AnimationUpdater>();
+		animationUpdater->frames.push_back(sf::IntRect(0, 0, 8, 8));
+		animationUpdater->frames.push_back(sf::IntRect(8, 0, 8, 8));
+		animationUpdater->frames.push_back(sf::IntRect(16, 0, 8, 8));
+		animationUpdater->frames.push_back(sf::IntRect(24, 0, 8, 8));
+
+		animationUpdater->frameTime = 0.8f;
+		animationUpdater->looped = true;
+	}
 }
 
 void configurePosGen(EPosGenMode mode) {
@@ -281,7 +321,7 @@ void updateRenderMode() {
 
 		TwRemoveAllVars(bar);
 
-		renderModeType = TwDefineEnum("RenderModeType", renderModeEV, 3);
+		renderModeType = TwDefineEnum("RenderModeType", renderModeEV, 5);
 		TwAddVarRW(bar, "RenderMode", renderModeType, &renderMode, " group='General' label='Render Mode' ");
 
 		if (renderMode == ERenderMode::PointRendering) {
@@ -309,12 +349,20 @@ void updateRenderMode() {
 			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), WIDTH, HEIGHT));
 			((particles::MetaballParticleSystem *)particleSystem.get())->color = sf::Color(20, 50, 100, 255);
 
+			std::cout << selectedTex << std::endl;
+
 			TwAddVarRW(bar, "threshold", TW_TYPE_FLOAT, &((particles::MetaballParticleSystem *)particleSystem.get())->threshold, " min=0.1 max=0.9 step=0.1 group='Metaball' label='Threshold' ");
 			TwAddVarRW(bar, "color", TW_TYPE_COLOR32, &((particles::MetaballParticleSystem *)particleSystem.get())->color, " group='Metaball' label='Color' ");
 			TwAddVarRW(bar, "colorAlpha", TW_TYPE_UINT8, &((particles::MetaballParticleSystem *)particleSystem.get())->color.a, " group='Metaball' label='Color Alpha' ");
 		}
+		else if (renderMode == ERenderMode::SpritesheetRendering || renderMode == ERenderMode::AnimatedRendering) {
+			posGenMode = EPosGenMode::Point;
+			velGenMode = EVelGenMode::Angle;
 
-		particleSystem->emitRate = 10000.0f / 4.0f / 10.f;
+			particleSystem.reset(new particles::SpriteSheetParticleSystem(10000, spritesheetTexture.get()));
+		}
+
+		particleSystem->emitRate = 100.0f;
 		TwAddVarRW(bar, "EmitRate", TW_TYPE_FLOAT, &particleSystem->emitRate, " group='General' label='Particle Emit Rate' ");
 
 		configurePS(renderMode);
@@ -322,8 +370,6 @@ void updateRenderMode() {
 }
 
 int main() {
-	bool wrongDir = false;
-
 	// create the window
 	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Particles");
 	window.setVerticalSyncEnabled(true);
@@ -344,27 +390,24 @@ int main() {
 	circleTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
 	blobTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
 	starTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
+	spritesheetTexture = std::unique_ptr<sf::Texture>(new sf::Texture());
 	if (!circleTexture->loadFromFile("res/circleTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
-		wrongDir = true;
 	}
 	if (!blobTexture->loadFromFile("res/blobTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
-		wrongDir = true;
 	}
 	if (!starTexture->loadFromFile("res/starTexture.png")) {
 		std::cout << "Invalid path to texture." << std::endl;
-		wrongDir = true;
 	}
-
-	if (wrongDir) {
-		std::cerr << "Please use the 'particles' root directory as working directory." << std::endl;
-		return 0;
+	if (!spritesheetTexture->loadFromFile("res/spritesheet.png")) {
+		std::cout << "Invalid path to texture." << std::endl;
 	}
 
 	circleTexture->setSmooth(true);
 	blobTexture->setSmooth(true);
 	starTexture->setSmooth(true);
+	spritesheetTexture->setSmooth(false);
 	
 	sf::Clock clock;
 
