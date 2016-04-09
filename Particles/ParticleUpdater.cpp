@@ -152,12 +152,6 @@ namespace particles
 
 			if (data->time[i].x < 0.0f) {
 				data->kill(i);
-				if (data->countAlive < data->count) {
-					endId = data->countAlive;
-				}
-				else {
-					endId = data->count;
-				}
 			}
 		}
 	}

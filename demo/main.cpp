@@ -349,8 +349,6 @@ void updateRenderMode() {
 			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), WIDTH, HEIGHT));
 			((particles::MetaballParticleSystem *)particleSystem.get())->color = sf::Color(20, 50, 100, 255);
 
-			std::cout << selectedTex << std::endl;
-
 			TwAddVarRW(bar, "threshold", TW_TYPE_FLOAT, &((particles::MetaballParticleSystem *)particleSystem.get())->threshold, " min=0.1 max=0.9 step=0.1 group='Metaball' label='Threshold' ");
 			TwAddVarRW(bar, "color", TW_TYPE_COLOR32, &((particles::MetaballParticleSystem *)particleSystem.get())->color, " group='Metaball' label='Color' ");
 			TwAddVarRW(bar, "colorAlpha", TW_TYPE_UINT8, &((particles::MetaballParticleSystem *)particleSystem.get())->color.a, " group='Metaball' label='Color Alpha' ");
@@ -362,7 +360,7 @@ void updateRenderMode() {
 			particleSystem.reset(new particles::SpriteSheetParticleSystem(10000, spritesheetTexture.get()));
 		}
 
-		particleSystem->emitRate = 100.0f;
+		particleSystem->emitRate = 160.0f;
 		TwAddVarRW(bar, "EmitRate", TW_TYPE_FLOAT, &particleSystem->emitRate, " group='General' label='Particle Emit Rate' ");
 
 		configurePS(renderMode);
