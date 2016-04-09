@@ -152,10 +152,11 @@ void configurePS(ERenderMode mode) {
 	auto timeUpdater = particleSystem->addUpdater<particles::TimeUpdater>();
 	auto colorUpdater = particleSystem->addUpdater<particles::ColorUpdater>();
 	auto sizeUpdater = particleSystem->addUpdater<particles::SizeUpdater>();
-	auto eulerUpdater = particleSystem->addUpdater<particles::EulerUpdater>();
+
 	auto verticalCollider = particleSystem->addUpdater<particles::VerticalCollider>();
 	verticalCollider->pos = HEIGHT;
-	verticalCollider->invert = false;
+
+	auto eulerUpdater = particleSystem->addUpdater<particles::EulerUpdater>();
 
 	TwAddVarRW(bar, "eulerGlobalAcc", TW_TYPE_VECTOR2F, &eulerUpdater->globalAcceleration, "group='Physics' label='Global Acceleration' ");
 	TwAddVarRW(bar, "pos", TW_TYPE_FLOAT, &verticalCollider->pos, "group='Physics' label='collider position' ");
