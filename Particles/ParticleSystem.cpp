@@ -31,8 +31,8 @@ namespace particles
 		if (maxNewParticles == 0) return;
 
 		const int startId = m_particles->countAlive;
-		const int endId = std::min(startId + maxNewParticles - 1, m_particles->count - 1);
-		const int newParticles = endId - startId + 1;
+		const int endId = std::min(startId + maxNewParticles, m_particles->count - 1);
+		const int newParticles = endId - startId;
 
 		for (auto &generator : m_generators) {
 			generator->generate(m_particles, startId, endId);
@@ -43,8 +43,8 @@ namespace particles
 
 	void ParticleSystem::emitWithCount(int count) {
 		const int startId = m_particles->countAlive;
-		const int endId = std::min(startId + count - 1, m_particles->count - 1);
-		const int newParticles = endId - startId + 1;
+		const int endId = std::min(startId + count, m_particles->count - 1);
+		const int newParticles = endId - startId;
 
 		for (auto &generator : m_generators) {
 			generator->generate(m_particles, startId, endId);
