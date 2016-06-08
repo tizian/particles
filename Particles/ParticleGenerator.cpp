@@ -165,8 +165,8 @@ namespace particles
 
 	void AngledVelocityGenerator::generate(ParticleData *data, int startId, int endId) {
 		for (int i = startId; i < endId; ++i) {
-			float phi = DEG_TO_RAD * (randomFloat(minAngle, maxAngle) + 90.0f);		// offset to start at top instead of "mathematical 0 degrees"
-			sf::Vector2f dir{ std::cos(phi), -std::sin(phi) };
+			float phi = DEG_TO_RAD * (randomFloat(minAngle, maxAngle) - 90.0f);		// offset to start at top instead of "mathematical 0 degrees"
+			sf::Vector2f dir{ std::cos(phi), std::sin(phi) };
 			float len = randomFloat(minStartSpeed, maxStartSpeed);
 			data->vel[i] = dir * len;
 		}
