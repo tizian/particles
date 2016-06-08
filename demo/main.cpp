@@ -99,31 +99,41 @@ void configurePS(ERenderMode mode) {
 
 	velGen->minAngle = -20.f;
 	velGen->maxAngle = 20.f;
-	velGen->minStartVel = 100.f;
-	velGen->maxStartVel = 100.f;
+	velGen->minStartSpeed = 100.f;
+	velGen->maxStartSpeed = 100.f;
 
 	if (!firstStart) {
-		TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='Min. angle [deg]' ");
-		TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='Max. angle [deg]' ");
-		TwAddVarRW(bar, "velAngleMinVel", TW_TYPE_FLOAT, &velGen->minStartVel, " group='Velocity' label='Min. Start Velocity' ");
-		TwAddVarRW(bar, "velAngleMaxVel", TW_TYPE_FLOAT, &velGen->maxStartVel, " group='Velocity' label='Max. Start Velocity' ");
+		TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='Min. Angle [deg]' ");
+		TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='Max. Angle [deg]' ");
+		TwAddVarRW(bar, "velAngleMinSpeed", TW_TYPE_FLOAT, &velGen->minStartSpeed, " group='Velocity' label='Min. Start Speed' ");
+		TwAddVarRW(bar, "velAngleMaxSpeed", TW_TYPE_FLOAT, &velGen->maxStartSpeed, " group='Velocity' label='Max. Start Speed' ");
 	}
 	firstStart = false;
 	
 	if (mode != ERenderMode::PointRendering) {
 		auto sizeGen = particleSystem->addGenerator<particles::SizeGenerator>();
-		sizeGen->minStartSize = 10.0f;
-		sizeGen->maxStartSize = 30.0f;
-		sizeGen->minEndSize = 5.f;
-		sizeGen->maxEndSize = 15.f;
+		sizeGen->minStartSize = 20.0f;
+		sizeGen->maxStartSize = 60.0f;
+		sizeGen->minEndSize = 10.f;
+		sizeGen->maxEndSize = 30.f;
 
 		TwAddVarRW(bar, "sizeGenMinStart", TW_TYPE_FLOAT, &sizeGen->minStartSize, " min=0 max=100 group='Size' label='Min. Start Size' ");
 		TwAddVarRW(bar, "sizeGenMaxStart", TW_TYPE_FLOAT, &sizeGen->maxStartSize, " min=0 max=100 group='Size' label='Max. Start Size' ");
 		TwAddVarRW(bar, "sizeGenMinEnd", TW_TYPE_FLOAT, &sizeGen->minEndSize, " min=0 max=100 group='Size' label='Min. End Size' ");
 		TwAddVarRW(bar, "sizeGenMaxEnd", TW_TYPE_FLOAT, &sizeGen->maxEndSize, " min=0 max=100 group='Size' label='Max. End Size' ");
+
+		auto rotGen = particleSystem->addGenerator<particles::RotationGenerator>();
+		rotGen->minStartAngle = -20.f;
+		rotGen->maxStartAngle = -20.f;
+		rotGen->minEndAngle = 90.f;
+		rotGen->maxEndAngle = 90.f;
+
+		TwAddVarRW(bar, "rotGenMinStart", TW_TYPE_FLOAT, &rotGen->minStartAngle, " min=-360 max=360 group='Angle' label='Min. Start Angle [deg]' ");
+		TwAddVarRW(bar, "rotGenMaxStart", TW_TYPE_FLOAT, &rotGen->maxStartAngle, " min=-360 max=360 group='Angle' label='Max. Start Angle [deg]' ");
+		TwAddVarRW(bar, "rotGenMinEnd", TW_TYPE_FLOAT, &rotGen->minEndAngle, " min=-360 max=360 group='Angle' label='Min. End Angle [deg]' ");
+		TwAddVarRW(bar, "rotGenMaxEnd", TW_TYPE_FLOAT, &rotGen->maxEndAngle, " min=-360 max=360 group='Angle' label='Max. End Angle [deg]' ");
 	}
 	
-
 	auto timeGen = particleSystem->addGenerator<particles::TimeGenerator>();
 	timeGen->minTime = 1.0f;
 	timeGen->maxTime = 5.0f;
@@ -152,6 +162,7 @@ void configurePS(ERenderMode mode) {
 	auto timeUpdater = particleSystem->addUpdater<particles::TimeUpdater>();
 	auto colorUpdater = particleSystem->addUpdater<particles::ColorUpdater>();
 	auto sizeUpdater = particleSystem->addUpdater<particles::SizeUpdater>();
+	auto rotUpdater = particleSystem->addUpdater<particles::RotationUpdater>();
 
 	auto verticalCollider = particleSystem->addUpdater<particles::VerticalCollider>();
 	verticalCollider->pos = HEIGHT;
@@ -196,7 +207,7 @@ void configurePosGen(EPosGenMode mode) {
 			positionGenerator = posGen;
 			position = &posGen->center;
 
-			posGen->size = { 80.f, 30.f };
+			posGen->size = { 160.f, 60.f };
 
 			TwAddVarRW(bar, "posBoxSize", TW_TYPE_VECTOR2F, &posGen->size, "group='Position' label='Size' ");
 		}
@@ -248,13 +259,13 @@ void configureVelGen(EVelGenMode mode) {
 
 			velGen->minAngle = -20.f;
 			velGen->maxAngle = 20.f;
-			velGen->minStartVel = 100.f;
-			velGen->maxStartVel = 100.0f;
+			velGen->minStartSpeed = 100.f;
+			velGen->maxStartSpeed = 100.0f;
 
 			TwAddVarRW(bar, "velAngleMinAngle", TW_TYPE_FLOAT, &velGen->minAngle, " min=-360 max=360 group='Velocity' label='Min. angle [deg]' ");
 			TwAddVarRW(bar, "velAngleMaxAngle", TW_TYPE_FLOAT, &velGen->maxAngle, " min=-360 max=360 group='Velocity' label='Max. angle [deg]' ");
-			TwAddVarRW(bar, "velAngleMinVel", TW_TYPE_FLOAT, &velGen->minStartVel, " group='Velocity' label='Min. Start Velocity' ");
-			TwAddVarRW(bar, "velAngleMaxVel", TW_TYPE_FLOAT, &velGen->maxStartVel, " group='Velocity' label='Max. Start Velocity' ");
+			TwAddVarRW(bar, "velAngleMinSpeed", TW_TYPE_FLOAT, &velGen->minStartSpeed, " group='Velocity' label='Min. Start Speed' ");
+			TwAddVarRW(bar, "velAngleMaxSpeed", TW_TYPE_FLOAT, &velGen->maxStartSpeed, " group='Velocity' label='Max. Start Speed' ");
 
 		}
 		break;
