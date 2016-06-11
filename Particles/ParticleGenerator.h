@@ -1,254 +1,242 @@
 #pragma once
 
-#include "Particles/ParticleData.h"
-
 #include <SFML/Graphics.hpp>
 
-namespace particles
-{
-	/* Abstract base class for all generators */
-	class ParticleGenerator
-	{
-	public:
-		ParticleGenerator() {}
-		virtual ~ParticleGenerator() {}
+namespace particles {
 
-		virtual void generate(ParticleData *data, int startId, int endId) = 0;
-	};
+class ParticleData;
 
+/* Abstract base class for all generators */
+class ParticleGenerator {
+public:
+	ParticleGenerator() {}
+	virtual ~ParticleGenerator() {}
 
-	class PointPositionGenerator : public ParticleGenerator
-	{
-	public:
-		PointPositionGenerator() {}
-		~PointPositionGenerator() {}
+	virtual void generate(ParticleData *data, int startId, int endId) = 0;
+};
 
-		void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		sf::Vector2f center{ 0.0f, 0.0f };
-	};
+/* Position Generators */
 
+class PointPositionGenerator : public ParticleGenerator {
+public:
+	PointPositionGenerator() {}
+	~PointPositionGenerator() {}
 
-	class BoxPositionGenerator : public ParticleGenerator
-	{
-	public:
-		BoxPositionGenerator() {}
-		~BoxPositionGenerator() {}
+	void generate(ParticleData *data, int startId, int endId);
 
-		void generate(ParticleData *data, int startId, int endId);
+public:
+	sf::Vector2f center{ 0.0f, 0.0f };
+};
 
-	public:
-		sf::Vector2f center{ 0.0f, 0.0f };
-	    sf::Vector2f size{ 0.0f, 0.0f };
-	};
+class BoxPositionGenerator : public ParticleGenerator {
+public:
+	BoxPositionGenerator() {}
+	~BoxPositionGenerator() {}
 
+	void generate(ParticleData *data, int startId, int endId);
 
-	class CirclePositionGenerator : public ParticleGenerator
-	{
-	public:
-		CirclePositionGenerator() {}
-		~CirclePositionGenerator() {}
+public:
+	sf::Vector2f center{ 0.0f, 0.0f };
+    sf::Vector2f size{ 0.0f, 0.0f };
+};
 
-		void generate(ParticleData *data, int startId, int endId);
+class CirclePositionGenerator : public ParticleGenerator {
+public:
+	CirclePositionGenerator() {}
+	~CirclePositionGenerator() {}
 
-	public:
-		sf::Vector2f center{ 0.0f, 0.0f };
-		sf::Vector2f radius{ 0.0f, 0.0f };
-	};
+	void generate(ParticleData *data, int startId, int endId);
 
+public:
+	sf::Vector2f center{ 0.0f, 0.0f };
+	sf::Vector2f radius{ 0.0f, 0.0f };
+};
 
-	class DiskPositionGenerator : public ParticleGenerator
-	{
-	public:
-		DiskPositionGenerator() {}
-		~DiskPositionGenerator() {}
+class DiskPositionGenerator : public ParticleGenerator {
+public:
+	DiskPositionGenerator() {}
+	~DiskPositionGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		sf::Vector2f center{ 0.0f, 0.0f };
-		float radius{ 0.0f };
-	};
+public:
+	sf::Vector2f center{ 0.0f, 0.0f };
+	float radius{ 0.0f };
+};
 
 
-	class SizeGenerator : public ParticleGenerator
-	{
-	public:
-		SizeGenerator() {}
-		~SizeGenerator() {}
+/* Size Generators */
 
-		void generate(ParticleData *data, int startId, int endId);
+class SizeGenerator : public ParticleGenerator {
+public:
+	SizeGenerator() {}
+	~SizeGenerator() {}
 
-	public:
-		float minStartSize{ 1.0f };
-		float maxStartSize{ 1.0f };
-		float minEndSize{ 1.0f };
-		float maxEndSize{ 1.0f };
-	};
+	void generate(ParticleData *data, int startId, int endId);
 
+public:
+	float minStartSize{ 1.0f };
+	float maxStartSize{ 1.0f };
+	float minEndSize{ 1.0f };
+	float maxEndSize{ 1.0f };
+};
 
-	class ConstantSizeGenerator : public ParticleGenerator
-	{
-	public:
-		ConstantSizeGenerator() {}
-		~ConstantSizeGenerator() {}
+class ConstantSizeGenerator : public ParticleGenerator {
+public:
+	ConstantSizeGenerator() {}
+	~ConstantSizeGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		float size{ 1.0f };
-	};
+public:
+	float size{ 1.0f };
+};
 
 
-	class RotationGenerator : public ParticleGenerator
-	{
-	public:
-		RotationGenerator() {}
-		~RotationGenerator() {}
+/* Rotation Generators */
 
-		void generate(ParticleData *data, int startId, int endId);
+class RotationGenerator : public ParticleGenerator {
+public:
+	RotationGenerator() {}
+	~RotationGenerator() {}
 
-	public:
-		float minStartAngle{ 0.0f };
-		float maxStartAngle{ 0.0f };
-		float minEndAngle{ 0.0f };
-		float maxEndAngle{ 0.0f };
-	};
+	void generate(ParticleData *data, int startId, int endId);
 
+public:
+	float minStartAngle{ 0.0f };
+	float maxStartAngle{ 0.0f };
+	float minEndAngle{ 0.0f };
+	float maxEndAngle{ 0.0f };
+};
 
-	class DirectionDefinedRotationGenerator : public ParticleGenerator
-	{
-	public:
-		DirectionDefinedRotationGenerator() {}
-		~DirectionDefinedRotationGenerator() {}
+class ConstantRotationGenerator : public ParticleGenerator {
+public:
+	ConstantRotationGenerator() {}
+	~ConstantRotationGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
-	};
+	void generate(ParticleData *data, int startId, int endId);
 
+public:
+	float angle{ 0.0f };
+};
 
-	class ConstantRotationGenerator : public ParticleGenerator
-	{
-	public:
-		ConstantRotationGenerator() {}
-		~ConstantRotationGenerator() {}
+class DirectionDefinedRotationGenerator : public ParticleGenerator {
+public:
+	DirectionDefinedRotationGenerator() {}
+	~DirectionDefinedRotationGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
+};
 
-	public:
-		float angle{ 0.0f };
-	};
 
+/* Color Generators */
 
-	class ColorGenerator : public ParticleGenerator
-	{
-	public:
-		ColorGenerator() {}
-		~ColorGenerator() {}
+class ColorGenerator : public ParticleGenerator {
+public:
+	ColorGenerator() {}
+	~ColorGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		sf::Color minStartCol{ sf::Color::Black };
-		sf::Color maxStartCol{ sf::Color::Black };
-		sf::Color minEndCol{ sf::Color::Black };
-		sf::Color maxEndCol{ sf::Color::Black };
-	};
+public:
+	sf::Color minStartCol{ sf::Color::Black };
+	sf::Color maxStartCol{ sf::Color::Black };
+	sf::Color minEndCol{ sf::Color::Black };
+	sf::Color maxEndCol{ sf::Color::Black };
+};
 
+class ConstantColorGenerator : public ParticleGenerator {
+public:
+	ConstantColorGenerator() {}
+	~ConstantColorGenerator() {}
 
-	class ConstantColorGenerator : public ParticleGenerator
-	{
-	public:
-		ConstantColorGenerator() {}
-		~ConstantColorGenerator() {}
+	void generate(ParticleData *data, int startId, int endId);
 
-		void generate(ParticleData *data, int startId, int endId);
+public:
+	sf::Color color{ sf::Color::Black };
+};
 
-	public:
-		sf::Color color{ sf::Color::Black };
-	};
 
+/* Velocity Generators */
 
-	class VelocityGenerator : public ParticleGenerator
-	{
-	public:
-		VelocityGenerator() {}
-		~VelocityGenerator() {}
+class VelocityGenerator : public ParticleGenerator {
+public:
+	VelocityGenerator() {}
+	~VelocityGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		sf::Vector2f minStartVel{ 0.0f, 0.0f };
-		sf::Vector2f maxStartVel{ 0.0f, 0.0f };
-	};
+public:
+	sf::Vector2f minStartVel{ 0.0f, 0.0f };
+	sf::Vector2f maxStartVel{ 0.0f, 0.0f };
+};
 
+class AngledVelocityGenerator : public ParticleGenerator {
+public:
+	AngledVelocityGenerator() {}
+	~AngledVelocityGenerator() {}
 
-	class AngledVelocityGenerator : public ParticleGenerator
-	{
-	public:
-		AngledVelocityGenerator() {}
-		~AngledVelocityGenerator() {}
+	void generate(ParticleData *data, int startId, int endId);
 
-		void generate(ParticleData *data, int startId, int endId);
+public:
+	float minAngle{ 0.0f };
+	float maxAngle{ 0.0f };
+	float minStartSpeed{ 0.0f };
+	float maxStartSpeed{ 0.0f };
+};
 
-	public:
-		float minAngle{ 0.0f };
-		float maxAngle{ 0.0f };
-		float minStartSpeed{ 0.0f };
-		float maxStartSpeed{ 0.0f };
-	};
+class AimedVelocityGenerator : public ParticleGenerator {
+public:
+	AimedVelocityGenerator() {}
+	~AimedVelocityGenerator() {}
 
+	void generate(ParticleData *data, int startId, int endId);
 
-	class AimedVelocityGenerator : public ParticleGenerator
-	{
-	public:
-		AimedVelocityGenerator() {}
-		~AimedVelocityGenerator() {}
+public:
+	sf::Vector2f goal{ 0.f, 0.f };
+	float minStartSpeed{ 0.0f };
+	float maxStartSpeed{ 0.0f };
+};
 
-		void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		sf::Vector2f goal{ 0.f, 0.f };
-		float minStartSpeed{ 0.0f };
-		float maxStartSpeed{ 0.0f };
-	};
+/* Time Generators */
 
+class TimeGenerator : public ParticleGenerator {
+public:
+	TimeGenerator() {}
+	~TimeGenerator() {}
 
-	class TimeGenerator : public ParticleGenerator
-	{
-	public:
-		TimeGenerator() {}
-		~TimeGenerator() {}
+	void generate(ParticleData *data, int startId, int endId);
 
-		void generate(ParticleData *data, int startId, int endId);
+public:
+	float minTime{ 0.0f };
+	float maxTime{ 0.0f };
+};
 
-	public:
-		float minTime{ 0.0f };
-		float maxTime{ 0.0f };
-	};
 
-	class TexCoordsGenerator : public ParticleGenerator
-	{
-	public:
-		TexCoordsGenerator() {}
-		~TexCoordsGenerator() {}
+/* Texture Coordinates Generators */
 
-		void generate(ParticleData *data, int startId, int endId);
+class TexCoordsGenerator : public ParticleGenerator {
+public:
+	TexCoordsGenerator() {}
+	~TexCoordsGenerator() {}
 
-	public:
-		sf::IntRect texCoords{ 0, 0, 1, 1 };
-	};
+	void generate(ParticleData *data, int startId, int endId);
 
+public:
+	sf::IntRect texCoords{ 0, 0, 1, 1 };
+};
 
-	class TexCoordsRandomGenerator : public ParticleGenerator
-	{
-	public:
-		TexCoordsRandomGenerator() {}
-		~TexCoordsRandomGenerator() {}
+class TexCoordsRandomGenerator : public ParticleGenerator {
+public:
+	TexCoordsRandomGenerator() {}
+	~TexCoordsRandomGenerator() {}
 
-		void generate(ParticleData *data, int startId, int endId);
+	void generate(ParticleData *data, int startId, int endId);
 
-	public:
-		std::vector<sf::IntRect> texCoords;
-	};
+public:
+	std::vector<sf::IntRect> texCoords;
+};
+
 }
