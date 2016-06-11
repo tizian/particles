@@ -1,3 +1,13 @@
+/*
+    Particles/ParticleGenerator.cpp -- Particle generator classes
+    
+    Copyright (c) 2016 Tizian Zeltner
+
+    Particles is provided under the MIT License.
+    See the LICENSE.txt file for the conditions of the license. 
+*/
+
+
 #include "Particles/ParticleGenerator.h"
 
 #include "Particles/ParticleData.h"

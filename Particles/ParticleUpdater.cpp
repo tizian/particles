@@ -1,3 +1,12 @@
+/*
+    Particles/ParticleUpdater.h -- Particle updater classes
+    
+    Copyright (c) 2016 Tizian Zeltner
+
+    Particles is provided under the MIT License.
+    See the LICENSE.txt file for the conditions of the license. 
+*/
+
 #include "Particles/ParticleUpdater.h"
 
 #include "Particles/ParticleData.h"
