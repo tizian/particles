@@ -12,6 +12,59 @@ There are three different rendering styles to choose from:
   * Spritesheet
   * Animated spritesheet
 
+## Usage
+
+Particle systems are built with data-oriented design in mind. They are built out of different components that can be arbitrarily combined with each other. See below for an example setup.
+
+Create and configure textured particle system:
+```C++
+int maxNumberParticles = 1000;
+sf::Texture *texture = new sf::Texture();
+texture->loadFromFile(".../path/to/texture.png");
+
+particles::ParticleSystem *ps = new particles::TextureParticleSystem(maxNumberParticles, texture);
+ps->additiveBlendMode = true;
+ps->emitRate = 100.f; // particles per second
+```
+
+Add particle generators to define how particles look like.
+Most updaters allow you to set 'start' and 'end' values to define the state at start and end of their lifetime, as well as 'min' and 'max' values to add randomness.
+```C++
+// Spawn particles at position (500, 500)
+auto positionGenerator = ps->addGenerator<particles::PointPositionGenerator>();
+positionGenerator->center = sf::Vector2f(500.f, 500.f);
+
+// Set particle lifetime to random value between 1 and 5 seconds
+auto timeGenerator = ps->addGenerator<particles::TimeGenerator>();
+timeGenerator->minTime = 1.f;
+timeGenerator->maxTime = 5.f;
+
+// Set random particle start and end sizes to interpolate between over their lifetime
+auto sizeGenerator = ps->addGenerator<particles::SizeGenerator>();
+sizeGenerator->minStartSize = 10.f;
+sizeGenerator->maxStartSize = 30.f;
+sizeGenerator->minEndSize = 20.f;
+sizeGenerator->maxEndSize = 60.f;
+
+// Set particle start velocity using a random direction and speed
+auto velocityGenerator = ps->addGenerator<particles::AngledVelocityGenerator>();
+velocityGenerator->minAngle = -5.f;
+velocityGenerator->maxAngle = 5.f;
+velocityGenerator->minStartSpeed = 10.f;
+velocityGenerator->maxStartSpeed = 20.f;
+```
+
+Add particle updaters to change particle state over time.
+```C++
+// Update particle lifetime
+ps->addUpdater<particles::TimeUpdater>();
+
+// Interpolate particle size
+ps->addUpdater<particles::SizeUpdater>();
+
+// Update particle position using velocity and acceleration data
+ps->addUpdater<particles::EulerUpdater>();
+```
 
 ## Building
 
