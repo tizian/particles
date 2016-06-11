@@ -10,7 +10,7 @@ There are three different rendering styles to choose from:
   * Animated spritesheet
 
 
-<img src="screenshots/screenshot1.png" align="center" height="400" >
+<img src="screenshots/preview.gif" align="center" height="400" >
 
 ## Building
 
