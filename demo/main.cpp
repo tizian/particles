@@ -1,12 +1,3 @@
-/*
-    demo/main.cpp -- Demo application
-    
-    Copyright (c) 2016 Tizian Zeltner
-
-    Particles is provided under the MIT License.
-    See the LICENSE.txt file for the conditions of the license. 
-*/
-
 #include <Particles/ParticleSystem.h>
 
 #include <AntTweakBar.h>
