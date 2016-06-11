@@ -1,8 +1,14 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(particles)
 
-option(PARTICLES_BUILD_DEMO "Build demo application" OFF)
+if(NOT IS_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/ext/sfml")
+  message(FATAL_ERROR "Missing SFML repository!"
+  	"Particles depends on the SFML library and has to be cloned with the --recursive flag."
+    "Fix by calling \"git submodule update --init --recursive\"")
+endif()
+
+option(PARTICLES_BUILD_DEMO "Build demo application?" OFF)
 
 if(WIN32)
 	include(CheckCXXCompilerFlag)
