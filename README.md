@@ -90,9 +90,14 @@ Alternatively, you can also simply copy the `Particles` folder with all source f
 
 ## Acknowledgements
 
-The particle system is based on a [tutorial series](http://www.bfilipek.com/2014/03/three-particle-effects.html) by Bartlomiej Filipek.
+This library is inspired by a [tutorial series](http://www.bfilipek.com/2014/03/three-particle-effects.html) by Bartlomiej Filipek.
+The Metaball rendering technique is described in [this tutorial](http://nullcandy.com/2d-metaballs-in-xna/) by NullCandy games.
 
-The Metaball rendering technique is inspired by [this tutorial](http://nullcandy.com/2d-metaballs-in-xna/) by NullCandy games.
+## License
+
+Particles is provided under the MIT License.
+
+See the LICENSE.txt file for the conditions of the license.
 
 ## Screenshots
 
