@@ -1,6 +1,6 @@
 # Particles
 
-<img src="screenshots/preview.gif" align="center" height="400">
+<img src="screenshots/animation.gif" align="center" height="400">
 
 Small library for 2D particle effects based on SFML.
 
