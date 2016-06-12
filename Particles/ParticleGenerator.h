@@ -16,56 +16,6 @@ public:
 };
 
 
-/* Position Generators */
-
-class PointPositionGenerator : public ParticleGenerator {
-public:
-	PointPositionGenerator() {}
-	~PointPositionGenerator() {}
-
-	void generate(ParticleData *data, int startId, int endId);
-
-public:
-	sf::Vector2f center{ 0.0f, 0.0f };
-};
-
-class BoxPositionGenerator : public ParticleGenerator {
-public:
-	BoxPositionGenerator() {}
-	~BoxPositionGenerator() {}
-
-	void generate(ParticleData *data, int startId, int endId);
-
-public:
-	sf::Vector2f center{ 0.0f, 0.0f };
-    sf::Vector2f size{ 0.0f, 0.0f };
-};
-
-class CirclePositionGenerator : public ParticleGenerator {
-public:
-	CirclePositionGenerator() {}
-	~CirclePositionGenerator() {}
-
-	void generate(ParticleData *data, int startId, int endId);
-
-public:
-	sf::Vector2f center{ 0.0f, 0.0f };
-	sf::Vector2f radius{ 0.0f, 0.0f };
-};
-
-class DiskPositionGenerator : public ParticleGenerator {
-public:
-	DiskPositionGenerator() {}
-	~DiskPositionGenerator() {}
-
-	void generate(ParticleData *data, int startId, int endId);
-
-public:
-	sf::Vector2f center{ 0.0f, 0.0f };
-	float radius{ 0.0f };
-};
-
-
 /* Size Generators */
 
 class SizeGenerator : public ParticleGenerator {

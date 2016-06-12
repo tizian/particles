@@ -45,6 +45,7 @@ add_library(particles STATIC
 	"${PROJECT_SOURCE_DIR}/Particles/ParticleGenerator.cpp"
 	"${PROJECT_SOURCE_DIR}/Particles/ParticleSystem.cpp"
 	"${PROJECT_SOURCE_DIR}/Particles/ParticleUpdater.cpp"
+	"${PROJECT_SOURCE_DIR}/Particles/ParticleSpawner.cpp"
 )
 
 target_link_libraries(particles sfml-system sfml-graphics)

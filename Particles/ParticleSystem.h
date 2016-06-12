@@ -2,8 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Particles/ParticleUpdater.h"
 #include "Particles/ParticleGenerator.h"
+#include "Particles/ParticleSpawner.h"
+#include "Particles/ParticleUpdater.h"
 
 namespace particles {
 
@@ -31,6 +32,13 @@ public:
 	}
 
 	template<typename T>
+	inline T *addSpawner() {
+		T *s = new T();
+		m_spawners.push_back(s);
+		return s;
+	}
+
+	template<typename T>
 	inline T *addUpdater() {
 		T *u = new T();
 		m_updaters.push_back(u);
@@ -38,6 +46,31 @@ public:
 	}
 
 	void emitParticles(int count); 	// emit a fix number of particles
+
+	inline size_t getNumberGenerators() const { return m_generators.size(); }
+	inline size_t getNumberSpawners() const { return m_spawners.size(); }
+	inline size_t getNumberUpdaters() const { return m_updaters.size(); }
+
+	inline void clearGenerators() { 
+		for (auto g : m_generators) {
+			delete g;
+		}
+		m_generators.clear();
+	}
+
+	inline void clearSpawners() {
+		for (auto s : m_spawners) {
+			delete s;
+		}
+		m_spawners.clear();
+	}
+
+	inline void clearUpdaters() {
+		for (auto u : m_updaters) {
+			delete u;
+		}
+		m_updaters.clear();
+	}
 
 protected:
 	void emitWithRate(float dt);	// emit a stream of particles defined by emitRate and dt
@@ -51,6 +84,7 @@ protected:
 	ParticleData *m_particles;
 	
 	std::vector<ParticleGenerator *> m_generators;
+	std::vector<ParticleSpawner *> m_spawners;
 	std::vector<ParticleUpdater *> m_updaters;
 
 	sf::VertexArray m_vertices;

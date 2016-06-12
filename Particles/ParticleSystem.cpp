@@ -2,6 +2,8 @@
 
 #include "Particles/ParticleData.h"
 
+#include <iostream>
+
 namespace particles {
 
 /* ParticleSystem */
@@ -12,6 +14,10 @@ ParticleSystem::ParticleSystem(int maxCount) : emitRate(0.f), m_dt(0.f) {
 
 ParticleSystem::~ParticleSystem() {
 	delete m_particles;
+
+	for (auto s : m_spawners) {
+		delete s;
+	}
 
 	for (auto g : m_generators) {
 		delete g;
@@ -34,21 +40,26 @@ void ParticleSystem::emitWithRate(float dt) {
 
 	if (maxNewParticles == 0) return;
 
-	const int startId = m_particles->countAlive;
-	const int endId = std::min(startId + maxNewParticles, m_particles->count - 1);
-	const int newParticles = endId - startId;
-
-	for (auto &generator : m_generators) {
-		generator->generate(m_particles, startId, endId);
-	}
-
-	m_particles->countAlive += newParticles;
+	emitParticles(maxNewParticles);
 }
 
 void ParticleSystem::emitParticles(int count) {
+	if (m_spawners.size() == 0) return;
+
 	const int startId = m_particles->countAlive;
-	const int endId = std::min(startId + count, m_particles->count - 1);
+	const int endId = std::min(startId + count - 1, m_particles->count - 1);
 	const int newParticles = endId - startId;
+
+	const int spawnerCount = newParticles / m_spawners.size();
+	const int remainder = newParticles - spawnerCount * m_spawners.size();
+	int spawnerStartId = startId;
+	for (size_t i = 0; i < m_spawners.size(); ++i) {
+		int numberToSpawn = (i < remainder) ? spawnerCount + 1 : spawnerCount;
+		m_spawners[i]->spawn(m_particles, spawnerStartId, spawnerStartId + numberToSpawn - 1);
+		spawnerStartId += numberToSpawn;
+	}
+
+	m_spawners[0]->spawn(m_particles, startId, endId);
 
 	for (auto &generator : m_generators) {
 		generator->generate(m_particles, startId, endId);

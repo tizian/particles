@@ -29,15 +29,15 @@ TwEnumVal renderModeEV[] = {
 };
 TwType renderModeType;
 
-enum EPosGenMode { Point, Box, Circle, Disk, EPosGenModeCount };
-EPosGenMode posGenMode = EPosGenMode::Point;
-EPosGenMode lastPosGenMode = EPosGenMode::EPosGenModeCount;
+enum EPosSpawnMode { Point, Box, Circle, Disk, EPosSpawnModeCount };
+EPosSpawnMode posSpawnMode = EPosSpawnMode::Point;
+EPosSpawnMode lastPosSpawnMode = EPosSpawnMode::EPosSpawnModeCount;
 
-TwEnumVal posGenModeEV[] = {
-	{ EPosGenMode::Point, "Point" },
-	{ EPosGenMode::Box, "Box" },
-	{ EPosGenMode::Circle, "Circle" },
-	{ EPosGenMode::Disk, "Disk" }
+TwEnumVal posSpawnModeEV[] = {
+	{ EPosSpawnMode::Point, "Point" },
+	{ EPosSpawnMode::Box, "Box" },
+	{ EPosSpawnMode::Circle, "Circle" },
+	{ EPosSpawnMode::Disk, "Disk" }
 };
 TwType TW_TYPE_POS_GEN_MODE;
 
@@ -82,18 +82,18 @@ std::unique_ptr<particles::ParticleSystem> particleSystem;
 // Emitter Position of Particle System
 sf::Vector2f *position = nullptr;
 
-particles::ParticleGenerator *positionGenerator;
+particles::ParticleSpawner *positionGenerator;
 particles::ParticleGenerator *velocityGenerator;
 
 void configureVelGen(EVelGenMode mode);
-void configurePosGen(EPosGenMode mode);
+void configurePosSpawn(EPosSpawnMode mode);
 
 void configurePS(ERenderMode mode) {
-	TwAddVarRW(bar, "PosGenMode", TW_TYPE_POS_GEN_MODE, &posGenMode, " group='Position' label='Generator Type' ");
+	TwAddVarRW(bar, "PosSpawnMode", TW_TYPE_POS_GEN_MODE, &posSpawnMode, " group='Position' label='Spawner Type' ");
 
-	auto posGen = particleSystem->addGenerator<particles::PointPositionGenerator>();
-	positionGenerator = posGen;
-	position = &posGen->center;
+	auto posSpawner = particleSystem->addSpawner<particles::PointSpawner>();
+	positionGenerator = posSpawner;
+	position = &posSpawner->center;
 
 	TwAddVarRW(bar, "VelGenMode", TW_TYPE_VEL_GEN_MODE, &velGenMode, " group='Velocity' label='Generator Type' ");
 
@@ -197,43 +197,43 @@ void configurePS(ERenderMode mode) {
 	}
 }
 
-void configurePosGen(EPosGenMode mode) {
+void configurePosSpawn(EPosSpawnMode mode) {
 	switch(mode) {
-		case EPosGenMode::Point: {
-			auto posGen = particleSystem->addGenerator<particles::PointPositionGenerator>();
-			positionGenerator = posGen;
-			position = &posGen->center;
+		case EPosSpawnMode::Point: {
+			auto posSpanwer = particleSystem->addSpawner<particles::PointSpawner>();
+			positionGenerator = posSpanwer;
+			position = &posSpanwer->center;
 		}
 		break;
-		case EPosGenMode::Box: {
-			auto posGen = particleSystem->addGenerator<particles::BoxPositionGenerator>();
-			positionGenerator = posGen;
-			position = &posGen->center;
+		case EPosSpawnMode::Box: {
+			auto posSpanwer = particleSystem->addSpawner<particles::BoxSpawner>();
+			positionGenerator = posSpanwer;
+			position = &posSpanwer->center;
 
-			posGen->size = { 160.f, 60.f };
+			posSpanwer->size = { 160.f, 60.f };
 
-			TwAddVarRW(bar, "posBoxSize", TW_TYPE_VECTOR2F, &posGen->size, "group='Position' label='Size' ");
+			TwAddVarRW(bar, "posBoxSize", TW_TYPE_VECTOR2F, &posSpanwer->size, "group='Position' label='Size' ");
 		}
 		break;
-		case EPosGenMode::Circle: {
-			auto posGen = particleSystem->addGenerator<particles::CirclePositionGenerator>();
-			positionGenerator = posGen;
-			position = &posGen->center;
+		case EPosSpawnMode::Circle: {
+			auto posSpanwer = particleSystem->addSpawner<particles::CircleSpawner>();
+			positionGenerator = posSpanwer;
+			position = &posSpanwer->center;
 
-			posGen->radius = { 70.f, 40.f };
+			posSpanwer->radius = { 70.f, 40.f };
 
-			TwAddVarRW(bar, "posCircleRadius", TW_TYPE_VECTOR2F, &posGen->radius, "group='Position' label='Radius' ");
+			TwAddVarRW(bar, "posCircleRadius", TW_TYPE_VECTOR2F, &posSpanwer->radius, "group='Position' label='Radius' ");
 
 		}
 		break;
-		case EPosGenMode::Disk: {
-			auto posGen = particleSystem->addGenerator<particles::DiskPositionGenerator>();
-			positionGenerator = posGen;
-			position = &posGen->center;
+		case EPosSpawnMode::Disk: {
+			auto posSpanwer = particleSystem->addSpawner<particles::DiskSpawner>();
+			positionGenerator = posSpanwer;
+			position = &posSpanwer->center;
 
-			posGen->radius = 150.f;
+			posSpanwer->radius = 150.f;
 
-			TwAddVarRW(bar, "posDiskRadius", TW_TYPE_FLOAT, &posGen->radius, "group='Position' label='Radius' ");
+			TwAddVarRW(bar, "posDiskRadius", TW_TYPE_FLOAT, &posSpanwer->radius, "group='Position' label='Radius' ");
 
 		}
 		break;
@@ -289,21 +289,23 @@ void configureVelGen(EVelGenMode mode) {
 	}
 }
 
-void updatePosGen() {
-	if (posGenMode != lastPosGenMode) {
-		if (lastPosGenMode == EPosGenMode::Box) {
+void updatePosSpawn() {
+	if (posSpawnMode != lastPosSpawnMode) {
+		particleSystem->clearSpawners();
+
+		if (lastPosSpawnMode == EPosSpawnMode::Box) {
 			TwRemoveVar(bar, "posBoxSize");
 		}
-		else if (lastPosGenMode == EPosGenMode::Circle) {
+		else if (lastPosSpawnMode == EPosSpawnMode::Circle) {
 			TwRemoveVar(bar, "posCircleRadius");
 		}
-		else if (lastPosGenMode == EPosGenMode::Disk) {
+		else if (lastPosSpawnMode == EPosSpawnMode::Disk) {
 			TwRemoveVar(bar, "posDiskRadius");
 		}
 
-		lastPosGenMode = posGenMode;
+		lastPosSpawnMode = posSpawnMode;
 
-		configurePosGen(posGenMode);
+		configurePosSpawn(posSpawnMode);
 	}
 }
 
@@ -357,13 +359,13 @@ void updateRenderMode() {
 		TwAddVarRW(bar, "RenderMode", renderModeType, &renderMode, " group='General' label='Render Mode' ");
 
 		if (renderMode == ERenderMode::PointRendering) {
-			posGenMode = EPosGenMode::Point;
+			posSpawnMode = EPosSpawnMode::Point;
 			velGenMode = EVelGenMode::Angle;
 
 			particleSystem.reset(new particles::PointParticleSystem(10000));
 		}
 		else if (renderMode == ERenderMode::TextureRendering) {
-			posGenMode = EPosGenMode::Point;
+			posSpawnMode = EPosSpawnMode::Point;
 			velGenMode = EVelGenMode::Angle;
 			selectedTex = ESelectedTexture::Round;
 
@@ -375,7 +377,7 @@ void updateRenderMode() {
 			TwAddVarRW(bar, "SelectedTex", TW_TYPE_SELECTED_TEXTURE, &selectedTex, " group='Texture' label='Used Texture' ");
 		}
 		else if (renderMode == ERenderMode::MetaballRendering) {
-			posGenMode = EPosGenMode::Point;
+			posSpawnMode = EPosSpawnMode::Point;
 			velGenMode = EVelGenMode::Angle;
 
 			particleSystem.reset(new particles::MetaballParticleSystem(10000, blobTexture.get(), WIDTH, HEIGHT));
@@ -386,7 +388,7 @@ void updateRenderMode() {
 			TwAddVarRW(bar, "colorAlpha", TW_TYPE_UINT8, &((particles::MetaballParticleSystem *)particleSystem.get())->color.a, " group='Metaball' label='Color Alpha' ");
 		}
 		else if (renderMode == ERenderMode::SpritesheetRendering || renderMode == ERenderMode::AnimatedSpritesheetRendering) {
-			posGenMode = EPosGenMode::Point;
+			posSpawnMode = EPosSpawnMode::Point;
 			velGenMode = EVelGenMode::Angle;
 
 			particleSystem.reset(new particles::SpriteSheetParticleSystem(10000, spritesheetTexture.get()));
@@ -412,7 +414,7 @@ int main() {
 	TwDefine(" GLOBAL help='2D Particle Test Application' ");
 	TwDefine(" Particles size='300 500' ");
 
-	TW_TYPE_POS_GEN_MODE = TwDefineEnum("PosGenModeType", posGenModeEV, 4);
+	TW_TYPE_POS_GEN_MODE = TwDefineEnum("PosSpawnModeType", posSpawnModeEV, 4);
 	TW_TYPE_VEL_GEN_MODE = TwDefineEnum("VelGenModeType", velGenModeEV, 3);
 	TW_TYPE_SELECTED_TEXTURE = TwDefineEnum("TexType", texEV, 3);
 	TW_TYPE_VECTOR2F = TwDefineStruct("Vector2f", vector2fMembers, 2, sizeof(sf::Vector2f), NULL, NULL);
@@ -460,7 +462,7 @@ int main() {
 		}
 
 		updateRenderMode();
-		updatePosGen();
+		updatePosSpawn();
 		updateVelGen();
 		updateTex();
 
