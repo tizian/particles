@@ -47,15 +47,16 @@ void ParticleSystem::emitParticles(int count) {
 	if (m_spawners.size() == 0) return;
 
 	const int startId = m_particles->countAlive;
-	const int endId = std::min(startId + count - 1, m_particles->count - 1);
+	const int endId = std::min(startId + count, m_particles->count - 1);
 	const int newParticles = endId - startId;
 
-	const int spawnerCount = newParticles / m_spawners.size();
-	const int remainder = newParticles - spawnerCount * m_spawners.size();
+	const int nSpawners = static_cast<int>(m_spawners.size());
+	const int spawnerCount = newParticles / nSpawners;
+	const int remainder = newParticles - spawnerCount * nSpawners;
 	int spawnerStartId = startId;
-	for (size_t i = 0; i < m_spawners.size(); ++i) {
+	for (int i = 0; i < nSpawners; ++i) {
 		int numberToSpawn = (i < remainder) ? spawnerCount + 1 : spawnerCount;
-		m_spawners[i]->spawn(m_particles, spawnerStartId, spawnerStartId + numberToSpawn - 1);
+		m_spawners[i]->spawn(m_particles, spawnerStartId, spawnerStartId + numberToSpawn);
 		spawnerStartId += numberToSpawn;
 	}
 
