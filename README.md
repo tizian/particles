@@ -71,7 +71,7 @@ ps->addUpdater<particles::EulerUpdater>();
 
 ## Building
 
-The recommended way to compile is using cmake. Don't forget to clone the repository with all dependencies.
+The recommended way to compile is using cmake. Don't forget to clone the repository with the `--recursive` flag to include the SFML dependency.
 
 ```
 git clone https://github.com/tizian/particles.git --recursive
