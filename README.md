@@ -69,6 +69,8 @@ ps->addUpdater<particles::SizeUpdater>();
 ps->addUpdater<particles::EulerUpdater>();
 ```
 
+The memory allocated inside these calls is managed internally.
+
 ## Building
 
 The recommended way to compile is using cmake. Don't forget to clone the repository with the `--recursive` flag to include the SFML dependency.
@@ -82,14 +84,14 @@ cmake ..
 make
 ```
 
-Optionally, the `PARTICLES_BUILD_DEMO` cmake flag can be set to build a small demo application to experiment with the particle systems. Note that this requires the AntTweakBar library installed and `ANT_TWEAK_BAR_ROOT` either set as an environment variable or a cmake flag.
-
+Optionally, the `PARTICLES_BUILD_DEMO` cmake flag can be set to build a small demo application to experiment with the particle systems.
 Alternatively, you can also simply copy the `Particles` folder with all source files to your SFML project.
 
 ## Used Libraries
 
-* SFML : Window creation and rendering
-* AntTweakBar: GUI (optional, used for demo application only)
+* [SFML](http://www.sfml-dev.org/) : Window creation and rendering
+* [dear imgui](https://github.com/ocornut/imgui): Used for demo application only
+* [imgui-sfml](https://github.com/EliasD/imgui-sfml): SFML imgui bindings
 
 ## Acknowledgements
 
