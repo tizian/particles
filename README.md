@@ -14,7 +14,7 @@ There are three different rendering styles to choose from:
 
 ## Usage
 
-Particle systems are built with data-oriented design in mind. They are built out of different components that can be arbitrarily combined with each other. See below for an example setup.
+Particle systems are built with data-oriented design in mind. They are built out of different components that can be arbitrarily combined with each other. See below for an example setup. Also refer to the demo application.
 
 Create and configure textured particle system:
 ```C++
