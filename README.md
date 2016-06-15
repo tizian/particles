@@ -106,17 +106,17 @@ See the LICENSE.txt file for the conditions of the license.
 
 ## Screenshots
 
-<img src="screenshots/1.png" align="center" height="400">
+<img src="screenshots/1.png" align="center">
 <p align="center">Point rendering</p>
 
-<img src="screenshots/2.png" align="center" height="400">
+<img src="screenshots/2.png" align="center">
 <p align="center">Textured rendering</p>
 
-<img src="screenshots/3.png" align="center" height="400">
+<img src="screenshots/3.png" align="center">
 <p align="center">Textured rendering with additive blend mode enabled</p>
 
-<img src="screenshots/4.png" align="center" height="400">
+<img src="screenshots/4.png" align="center">
 <p align="center">Spritesheet texture</p>
 
-<img src="screenshots/5.png" align="center" height="400">
+<img src="screenshots/5.png" align="center">
 <p align="center">Metaball rendering</p>
