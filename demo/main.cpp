@@ -338,6 +338,10 @@ void gui() {
 		ImGui::ColorEdit("max end", &colorGenerator->maxEndCol);
 	}
 
+	if (ImGui::CollapsingHeader("Euler Updater")) {
+		ImGui::SliderFloat2("gravity", &eulerUpdater->globalAcceleration, 0.f, 200.f);
+	}
+
 	ImGui::End();
 }
 
