@@ -45,6 +45,10 @@ public:
 		return u;
 	}
 
+	void removeGenerator(ParticleGenerator *g);
+	void removeSpawner(ParticleSpawner *s);
+	void removeUpdater(ParticleUpdater *u);
+
 	void emitParticles(int count); 	// emit a fix number of particles
 
 	inline size_t getNumberGenerators() const { return m_generators.size(); }

@@ -67,7 +67,7 @@ void ConstantColorGenerator::generate(ParticleData *data, int startId, int endId
 
 /* Velocity Generators */
 
-void VelocityGenerator::generate(ParticleData *data, int startId, int endId) {
+void VectorVelocityGenerator::generate(ParticleData *data, int startId, int endId) {
 	for (int i = startId; i < endId; ++i) {
 		data->vel[i] = randomVector2f(minStartVel, maxStartVel);
 	}

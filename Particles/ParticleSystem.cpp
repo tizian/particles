@@ -2,8 +2,6 @@
 
 #include "Particles/ParticleData.h"
 
-#include <iostream>
-
 namespace particles {
 
 /* ParticleSystem */
@@ -26,6 +24,30 @@ ParticleSystem::~ParticleSystem() {
 	for (auto u : m_updaters) {
 		delete u;
 	}
+}
+
+void ParticleSystem::removeGenerator(ParticleGenerator *g) {
+	if (g == nullptr) return;
+	auto it = std::find(m_generators.begin(), m_generators.end(), g);
+	if (it == m_generators.end()) return;
+	m_generators.erase(it);
+	delete g;
+}
+
+void ParticleSystem::removeSpawner(ParticleSpawner *s) {
+	if (s == nullptr) return;
+	auto it = std::find(m_spawners.begin(), m_spawners.end(), s);
+	if (it == m_spawners.end()) return;
+	m_spawners.erase(it);
+	delete s;
+}
+
+void ParticleSystem::removeUpdater(ParticleUpdater *u) {
+	if (u == nullptr) return;
+	auto it = std::find(m_updaters.begin(), m_updaters.end(), u);
+	if (it == m_updaters.end()) return;
+	m_updaters.erase(it);
+	delete u;
 }
 
 void ParticleSystem::emitWithRate(float dt) {

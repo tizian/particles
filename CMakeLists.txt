@@ -51,10 +51,23 @@ add_library(particles STATIC
 target_link_libraries(particles sfml-system sfml-graphics)
 
 if (PARTICLES_BUILD_DEMO)
-	find_package(AntTweakBar REQUIRED)
-	include_directories("${ANT_TWEAK_BAR_INCLUDE_PATH}" "${PROJECT_SOURCE_DIR}/demo")
-	add_executable(demo "${PROJECT_SOURCE_DIR}/demo/main.cpp" "${PROJECT_SOURCE_DIR}/demo/AntTweakBarInput.cpp")
-	target_link_libraries(demo ${ANT_TWEAK_BAR_LIBRARY} sfml-window particles)
+
+	include_directories(
+		"${PROJECT_SOURCE_DIR}/ext/imgui"
+		"${PROJECT_SOURCE_DIR}/ext/imgui-sfml"
+		"${PROJECT_SOURCE_DIR}/demo/imgui-custom.h"
+	)
+
+	add_executable(demo
+		"${PROJECT_SOURCE_DIR}/demo/main.cpp"
+		"${PROJECT_SOURCE_DIR}/demo/imgui-custom.cpp"
+		"${PROJECT_SOURCE_DIR}/ext/imgui/imgui.cpp"
+		"${PROJECT_SOURCE_DIR}/ext/imgui/imgui_draw.cpp"
+		"${PROJECT_SOURCE_DIR}/ext/imgui/imgui_demo.cpp"
+		"${PROJECT_SOURCE_DIR}/ext/imgui-sfml/imgui-SFML.cpp"
+	)
+
+	target_link_libraries(demo sfml-window particles)
 
 	file(COPY demo/res DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endif()

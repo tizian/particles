@@ -110,10 +110,10 @@ public:
 
 /* Velocity Generators */
 
-class VelocityGenerator : public ParticleGenerator {
+class VectorVelocityGenerator : public ParticleGenerator {
 public:
-	VelocityGenerator() {}
-	~VelocityGenerator() {}
+	VectorVelocityGenerator() {}
+	~VectorVelocityGenerator() {}
 
 	void generate(ParticleData *data, int startId, int endId);
 
