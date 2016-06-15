@@ -35,7 +35,7 @@ spawner->center = sf::Vector2f(500.f, 500.f);
 ```
 
 Add particle generators to define how particles look like.
-Most updaters allow you to set 'start' and 'end' values to define the state at start and end of their lifetime, as well as 'min' and 'max' values to add randomness.
+Most generators allow you to set 'start' and 'end' values to define the state at start and end of their lifetime, as well as 'min' and 'max' values to add randomness.
 ```C++
 // Set particle lifetime to random value between 1 and 5 seconds
 auto timeGenerator = ps->addGenerator<particles::TimeGenerator>();
