@@ -3,7 +3,7 @@
 
 namespace ImGui
 {
-   	bool ImGui::ColorEdit(const char *label, sf::Color *col, bool show_alpha) {
+   	bool ColorEdit(const char *label, sf::Color *col, bool show_alpha) {
 		float col4[4];
 		col4[0] = (float)col->r / 255.f;
 		col4[1] = (float)col->g / 255.f;
@@ -17,7 +17,7 @@ namespace ImGui
 		return value_changed;
 	}
 
-	bool ImGui::SliderFloat2(const char *label, sf::Vector2f *vec, float v_min, float v_max, const char *display_format, float power) {
+	bool SliderFloat2(const char *label, sf::Vector2f *vec, float v_min, float v_max, const char *display_format, float power) {
 		float vec2[2];
 		vec2[0] = vec->x;
 		vec2[1] = vec->y;
