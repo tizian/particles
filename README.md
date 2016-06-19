@@ -14,7 +14,7 @@ There are three different rendering styles to choose from:
 
 ## Usage
 
-Particle systems are built with data-oriented design in mind. They are built out of different components that can be arbitrarily combined with each other. See below for an example setup.
+Particle systems are built with data-oriented design in mind. They are built out of different components that can be arbitrarily combined with each other. See below for an example setup. Also refer to the demo application.
 
 Create and configure textured particle system:
 ```C++
@@ -35,7 +35,7 @@ spawner->center = sf::Vector2f(500.f, 500.f);
 ```
 
 Add particle generators to define how particles look like.
-Most updaters allow you to set 'start' and 'end' values to define the state at start and end of their lifetime, as well as 'min' and 'max' values to add randomness.
+Most generators allow you to set 'start' and 'end' values to define the state at start and end of their lifetime, as well as 'min' and 'max' values to add randomness.
 ```C++
 // Set particle lifetime to random value between 1 and 5 seconds
 auto timeGenerator = ps->addGenerator<particles::TimeGenerator>();
@@ -106,17 +106,17 @@ See the LICENSE.txt file for the conditions of the license.
 
 ## Screenshots
 
-<img src="screenshots/1.png" align="center" height="400">
+<img src="screenshots/1.png" align="center">
 <p align="center">Point rendering</p>
 
-<img src="screenshots/2.png" align="center" height="400">
+<img src="screenshots/2.png" align="center">
 <p align="center">Textured rendering</p>
 
-<img src="screenshots/3.png" align="center" height="400">
+<img src="screenshots/3.png" align="center">
 <p align="center">Textured rendering with additive blend mode enabled</p>
 
-<img src="screenshots/4.png" align="center" height="400">
+<img src="screenshots/4.png" align="center">
 <p align="center">Spritesheet texture</p>
 
-<img src="screenshots/5.png" align="center" height="400">
+<img src="screenshots/5.png" align="center">
 <p align="center">Metaball rendering</p>

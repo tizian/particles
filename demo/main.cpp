@@ -218,6 +218,9 @@ void setVelocityGeneratorMode() {
 }
 
 void gui() {
+
+	ImGui::SetNextWindowSize(ImVec2(380, 630), ImGuiSetCond_FirstUseEver);
+
 	ImGui::Begin("Particles Demo");
 
 	if (ImGui::CollapsingHeader("Particle System", ImGuiTreeNodeFlags_DefaultOpen)) {
