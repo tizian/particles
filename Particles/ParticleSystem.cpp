@@ -120,6 +120,8 @@ PointParticleSystem::PointParticleSystem(int maxCount) : ParticleSystem(maxCount
 void PointParticleSystem::render(sf::RenderTarget &renderTarget) {
 	updateVertices();
 
+	if (m_particles->countAlive <= 0) return;
+
 	sf::RenderStates states = sf::RenderStates::Default;
 
 	const sf::Vertex *ver = &m_vertices[0];
@@ -208,6 +210,8 @@ void TextureParticleSystem::updateVertices() {
 void TextureParticleSystem::render(sf::RenderTarget &renderTarget) {
 	updateVertices();
 
+	if (m_particles->countAlive <= 0) return;
+
 	sf::RenderStates states = sf::RenderStates::Default;
 
 	if (additiveBlendMode) {
@@ -226,6 +230,8 @@ void TextureParticleSystem::render(sf::RenderTarget &renderTarget) {
 void SpriteSheetParticleSystem::render(sf::RenderTarget &renderTarget) {
 	updateVertices();
 	
+	if (m_particles->countAlive <= 0) return;
+
 	sf::RenderStates states = sf::RenderStates::Default;
 
 	if (additiveBlendMode) {
@@ -290,6 +296,8 @@ MetaballParticleSystem::MetaballParticleSystem(int maxCount, sf::Texture *textur
 
 void MetaballParticleSystem::render(sf::RenderTarget &renderTarget) {
 	updateVertices();
+
+	if (m_particles->countAlive <= 0) return;
 
 	sf::RenderStates states = sf::RenderStates::Default;
 	states.blendMode = sf::BlendAdd;

@@ -19,10 +19,10 @@ public:
 	ParticleSystem(const ParticleSystem &) = delete;
 	ParticleSystem &operator=(const ParticleSystem &) = delete;
 
+	void reset();
+
 	virtual void update(const sf::Time &dt);
 	virtual void render(sf::RenderTarget &renderTarget) = 0;
-
-	virtual void reset();
 
 	template<typename T>
 	inline T *addGenerator() {
