@@ -24,7 +24,7 @@ texture->loadFromFile(".../path/to/texture.png");
 
 particles::ParticleSystem *ps = new particles::TextureParticleSystem(maxNumberParticles, texture);
 ps->additiveBlendMode = true;
-ps->emitRate = 100.f; // particles per second
+ps->emitRate = 100.f; // Particles per second. Use emitRate <= (maxNumberParticles / averageParticleLifetime) for constant streams
 ```
 
 Add at least one particle spawner to define where particles are generated:
