@@ -320,17 +320,17 @@ void gui() {
 	}
 
 	if (particleSystemMode != ParticleSystemMode::Points && ImGui::CollapsingHeader("Size Generator")) {
-		ImGui::SliderFloat("min start", &sizeGenerator->minStartSize, 0.f, 100.f);
-		ImGui::SliderFloat("max start", &sizeGenerator->maxStartSize, 0.f, 100.f);
-		ImGui::SliderFloat("min end", &sizeGenerator->minEndSize, 0.f, 100.f);
-		ImGui::SliderFloat("max end", &sizeGenerator->maxEndSize, 0.f, 100.f);
+		ImGui::SliderFloat("min start size", &sizeGenerator->minStartSize, 0.f, 100.f);
+		ImGui::SliderFloat("max start size", &sizeGenerator->maxStartSize, 0.f, 100.f);
+		ImGui::SliderFloat("min end size", &sizeGenerator->minEndSize, 0.f, 100.f);
+		ImGui::SliderFloat("max end size", &sizeGenerator->maxEndSize, 0.f, 100.f);
 	}
 
 	if (particleSystemMode != ParticleSystemMode::Points && ImGui::CollapsingHeader("Rotation Generator")) {
-		ImGui::SliderFloat("min start", &rotationGenerator->minStartAngle, -180.f, 180.f);
-		ImGui::SliderFloat("max start", &rotationGenerator->maxStartAngle, -180.f, 180.f);
-		ImGui::SliderFloat("min end", &rotationGenerator->minEndAngle, -180.f, 180.f);
-		ImGui::SliderFloat("max end", &rotationGenerator->maxEndAngle, -180.f, 180.f);
+		ImGui::SliderFloat("min start angle", &rotationGenerator->minStartAngle, -180.f, 180.f);
+		ImGui::SliderFloat("max start angle", &rotationGenerator->maxStartAngle, -180.f, 180.f);
+		ImGui::SliderFloat("min end angle", &rotationGenerator->minEndAngle, -180.f, 180.f);
+		ImGui::SliderFloat("max end angle", &rotationGenerator->maxEndAngle, -180.f, 180.f);
 	}
 
 	if (particleSystemMode != ParticleSystemMode::Metaball && ImGui::CollapsingHeader("Color Generator")) {
