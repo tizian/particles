@@ -218,7 +218,6 @@ void setVelocityGeneratorMode() {
 }
 
 void gui() {
-
 	ImGui::SetNextWindowSize(ImVec2(380, 630), ImGuiSetCond_FirstUseEver);
 
 	ImGui::Begin("Particles Demo");
@@ -348,8 +347,7 @@ void gui() {
 	ImGui::End();
 }
 
-int main()
-{
+int main() {
 	circleTexture = new sf::Texture();
 	blobTexture = new sf::Texture();
 	starTexture = new sf::Texture();
@@ -365,22 +363,22 @@ int main()
 
 	initParticleSystem();
 
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Particles Demo");
-    window.setVerticalSyncEnabled(true);
+	sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Particles Demo");
+	window.setVerticalSyncEnabled(true);
 
-    ImGui::SFML::Init(window);
+	ImGui::SFML::Init(window);
  
-    sf::Clock clock;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
+	sf::Clock clock;
+	while (window.isOpen()) {
+		sf::Event event;
+		while (window.pollEvent(event)) {
+			ImGui::SFML::ProcessEvent(event);
  
-            if (event.type == sf::Event::Closed ||
+			if (event.type == sf::Event::Closed ||
 				(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
-                window.close();
-            }
-        }
+				window.close();
+			}
+		}
 
 		sf::Vector2i mouse = sf::Mouse::getPosition(window);
 		sf::Vector2f pos = window.mapPixelToCoords(mouse);
@@ -388,19 +386,19 @@ int main()
 		spawner->center = pos;
 
 		sf::Time dt = clock.restart();
-        ImGui::SFML::Update(dt);
+		ImGui::SFML::Update(dt);
 		particleSystem->update(dt);
 
 		gui();
  
-        window.clear();
+		window.clear();
 
 		particleSystem->render(window);
-        ImGui::Render();
+		ImGui::Render();
 
-        window.display();
-    }
+		window.display();
+	}
  
-    ImGui::SFML::Shutdown();
+	ImGui::SFML::Shutdown();
 	delete particleSystem;
 }

@@ -35,7 +35,7 @@ public:
 	void spawn(ParticleData *data, int startId, int endId);
 
 public:
-    sf::Vector2f size{ 0.0f, 0.0f };
+	sf::Vector2f size{ 0.0f, 0.0f };
 };
 
 class CircleSpawner : public ParticleSpawner {
