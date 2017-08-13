@@ -25,15 +25,17 @@ void BoxSpawner::spawn(ParticleData *data, int startId, int endId) {
 void CircleSpawner::spawn(ParticleData *data, int startId, int endId) {
 	for (int i = startId; i < endId; ++i) {
 		float phi = randomFloat(0.0f, M_PI * 2.0f);
-		data->pos[i] = { center.x + radius.x * std::sin(phi), center.y + radius.y * std::cos(phi) };
+		data->pos[i] = { center.x + radius.x * std::cos(phi),
+						 center.y + radius.y * std::sin(phi) };
 	}
 }
 
 void DiskSpawner::spawn(ParticleData *data, int startId, int endId) {
 	for (int i = startId; i < endId; ++i) {
 		float phi = randomFloat(0.0f, M_PI * 2.0f);
-		float r = randomFloat(0.0f, radius);
-		data->pos[i] = { center.x + r * std::sin(phi), center.y + r * std::cos(phi) };
+		float jacobian = std::sqrt(randomFloat(0.0f, 1.f));
+		data->pos[i] = { center.x + jacobian * radius.x * std::cos(phi),
+						 center.y + jacobian * radius.y * std::sin(phi) };
 	}
 }
 

@@ -9,7 +9,7 @@
 #include <Particles/ParticleSystem.h>
 
 #include <iostream>
- 
+
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 
@@ -160,7 +160,7 @@ void setSpawnMode() {
 		spawner = boxSpawner;
 	}
 	break;
-	
+
 	case Circle: {
 		auto circleSpawner = particleSystem->addSpawner<particles::CircleSpawner>();
 		circleSpawner->radius = sf::Vector2f(70.f, 40.f);
@@ -170,11 +170,11 @@ void setSpawnMode() {
 
 	case Disk: {
 		auto diskSpawner = particleSystem->addSpawner<particles::DiskSpawner>();
-		diskSpawner->radius = 100.f;
+		diskSpawner->radius = sf::Vector2f(70.f, 40.f);
 		spawner = diskSpawner;
 	}
 	break;
-	
+
 	case Point:
 	default: {
 		spawner = particleSystem->addSpawner<particles::PointSpawner>();
@@ -194,7 +194,7 @@ void setVelocityGeneratorMode() {
 		velocityGenerator = vectorGenerator;
 	}
 	break;
-	
+
 	case Aimed: {
 		auto aimedGenerator = particleSystem->addGenerator<particles::AimedVelocityGenerator>();
 		aimedGenerator->goal = sf::Vector2f(0.5f * WINDOW_WIDTH, 0.5f * WINDOW_HEIGHT);
@@ -203,7 +203,7 @@ void setVelocityGeneratorMode() {
 		velocityGenerator = aimedGenerator;
 	}
 	break;
-				
+
 	case Angled:
 	default: {
 		auto angledGenerator = particleSystem->addGenerator<particles::AngledVelocityGenerator>();
@@ -282,7 +282,7 @@ void gui() {
 		}
 		else if (spawnerMode == SpawnerMode::Disk) {
 			auto sp = dynamic_cast<particles::DiskSpawner *>(spawner);
-			ImGui::SliderFloat("size", &sp->radius, 0.f, 500.f);
+			ImGui::SliderFloat2("size", &sp->radius, 0.f, 500.f);
 		}
 	}
 
@@ -367,13 +367,13 @@ int main() {
 	window.setVerticalSyncEnabled(true);
 
 	ImGui::SFML::Init(window);
- 
+
 	sf::Clock clock;
 	while (window.isOpen()) {
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			ImGui::SFML::ProcessEvent(event);
- 
+
 			if (event.type == sf::Event::Closed ||
 				(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)) {
 				window.close();
@@ -390,7 +390,7 @@ int main() {
 		particleSystem->update(dt);
 
 		gui();
- 
+
 		window.clear();
 
 		particleSystem->render(window);
@@ -398,7 +398,7 @@ int main() {
 
 		window.display();
 	}
- 
+
 	ImGui::SFML::Shutdown();
 	delete particleSystem;
 }

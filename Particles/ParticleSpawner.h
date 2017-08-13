@@ -57,7 +57,7 @@ public:
 	void spawn(ParticleData *data, int startId, int endId);
 
 public:
-	float radius{ 0.0f };
+	sf::Vector2f radius{ 0.0f, 0.0f };
 };
 
 }
